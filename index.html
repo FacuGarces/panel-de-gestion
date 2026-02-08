@@ -346,7 +346,8 @@
             
             geocoder = new google.maps.Geocoder();
             
-            map.addListener('click', () => {
+            // Cerrar InfoWindow cuando se hace click en el mapa
+            google.maps.event.addListener(map, 'click', function() {
                 if (currentInfoWindow) {
                     currentInfoWindow.close();
                     currentInfoWindow = null;
@@ -517,7 +518,7 @@
                             disableAutoPan: false
                         });
                         
-                        marker.addListener('click', () => {
+                        google.maps.event.addListener(marker, 'click', function() {
                             if (currentInfoWindow) {
                                 currentInfoWindow.close();
                             }
