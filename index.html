@@ -325,6 +325,12 @@
         function initMap() {
             const sanIsidro = { lat: -34.4707, lng: -58.5129 };
             
+            // Determinar posición del botón según el tamaño de pantalla
+            const isMobile = window.innerWidth <= 768;
+            const fullscreenPosition = isMobile 
+                ? google.maps.ControlPosition.RIGHT_BOTTOM 
+                : google.maps.ControlPosition.TOP_RIGHT;
+            
             map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 13,
                 center: sanIsidro,
@@ -333,7 +339,7 @@
                 fullscreenControl: true,
                 zoomControl: true,
                 fullscreenControlOptions: {
-                    position: google.maps.ControlPosition.TOP_RIGHT
+                    position: fullscreenPosition
                 }
             });
             
@@ -343,17 +349,6 @@
                 if (currentInfoWindow) {
                     currentInfoWindow.close();
                     currentInfoWindow = null;
-                }
-            });
-            
-            // Mover el botón de pantalla completa en mobile después de que el mapa cargue
-            google.maps.event.addListenerOnce(map, 'idle', function() {
-                if (window.innerWidth <= 768) {
-                    const fullscreenButton = document.querySelector('.gm-fullscreen-control');
-                    if (fullscreenButton) {
-                        fullscreenButton.style.top = '160px';
-                        fullscreenButton.style.right = '10px';
-                    }
                 }
             });
             
