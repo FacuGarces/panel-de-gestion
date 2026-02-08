@@ -244,6 +244,10 @@
                 margin: 8px;
                 font-size: 12px;
                 max-width: 220px;
+                position: fixed !important;
+                top: 160px !important;
+                left: 10px !important;
+                z-index: 1000;
             }
             
             .filters.collapsed {
@@ -391,13 +395,7 @@
                 });
             });
             
-            // Posición diferente según el tamaño de pantalla
-            const isMobile = window.innerWidth <= 768;
-            const position = isMobile 
-                ? google.maps.ControlPosition.TOP_CENTER 
-                : google.maps.ControlPosition.TOP_LEFT;
-            
-            map.controls[position].push(filtersDiv);
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(filtersDiv);
         }
         
         function updateMarkers() {
