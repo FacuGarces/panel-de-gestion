@@ -405,7 +405,12 @@
                 });
             });
             
-            map.controls[google.maps.ControlPosition.TOP_LEFT].push(filtersDiv);
+            // Desktop: arriba izquierda, Mobile: abajo derecha
+            const position = isMobile 
+                ? google.maps.ControlPosition.RIGHT_BOTTOM 
+                : google.maps.ControlPosition.TOP_LEFT;
+            
+            map.controls[position].push(filtersDiv);
         }
         
         function updateMarkers() {
