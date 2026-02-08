@@ -240,25 +240,33 @@
         /* Estilos para mobile */
         @media (max-width: 768px) {
             .filters {
+                padding: 10px;
+                margin: 8px;
                 font-size: 12px;
-                max-width: 220px;
-                position: fixed !important;
-                top: 200px !important;
-                left: 12px !important;
-                z-index: 1000;
+                max-width: 160px;
+                transition: all 0.3s ease;
             }
             
             .filters.collapsed {
-                padding: 8px 12px;
+                padding: 8px;
+                max-width: 50px;
+            }
+            
+            .filters.collapsed .filter-buttons {
+                display: none;
             }
             
             .filters h3 {
                 font-size: 14px;
-                margin-bottom: 10px;
+                margin-bottom: 8px;
+                cursor: pointer;
+                user-select: none;
             }
             
             .filters.collapsed h3 {
-                font-size: 12px;
+                margin: 0;
+                writing-mode: vertical-rl;
+                text-orientation: mixed;
             }
             
             .filter-button {
@@ -351,7 +359,11 @@
         
         function addFilters() {
             const filtersDiv = document.createElement('div');
-            filtersDiv.className = 'filters collapsed';
+            
+            // En mobile arranca colapsado, en desktop expandido
+            const isMobile = window.innerWidth <= 768;
+            filtersDiv.className = isMobile ? 'filters collapsed' : 'filters';
+            
             filtersDiv.innerHTML = `
                 <h3>Filtrar por estado</h3>
                 <div class="filter-buttons">
