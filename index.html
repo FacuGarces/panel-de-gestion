@@ -418,8 +418,11 @@
             filtersDiv.className = 'filters collapsed';
             
             filtersDiv.innerHTML = `
-                <h3>Filtrar por estado</h3>
-                <div class="filter-buttons">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                    <h3 style="margin: 0;">Filtrar por estado</h3>
+                    <span id="total-count" style="font-size: 14px; font-weight: 600; color: #30115e; white-space: nowrap;">0 total</span>
+                </div>
+                <div class="filter-buttons" style="margin-top: 12px;">
                     <button class="filter-button active" data-estado="Sin tratamiento">
                         <div class="filter-left">
                             <div class="filter-dot dot-red"></div>
@@ -444,7 +447,8 @@
                 </div>
             `;
             
-            filtersDiv.querySelector('h3').addEventListener('click', () => {
+            const h3Element = filtersDiv.querySelector('div:first-child');
+            h3Element.addEventListener('click', () => {
                 filtersDiv.classList.toggle('collapsed');
             });
             
@@ -486,6 +490,10 @@
             document.getElementById('count-sin').textContent = stateCounts['Sin tratamiento'];
             document.getElementById('count-proceso').textContent = stateCounts['En proceso'];
             document.getElementById('count-resuelto').textContent = stateCounts['Resuelto'];
+            
+            // Calcular y mostrar total
+            const total = stateCounts['Sin tratamiento'] + stateCounts['En proceso'] + stateCounts['Resuelto'];
+            document.getElementById('total-count').textContent = `${total} total`;
         }
         
         // Función para calcular tiempo relativo
