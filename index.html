@@ -525,107 +525,109 @@
         }
         
         function geocodeAndAddMarker(reclamo) {
-            return new Promise((resolve) => {
-                const direccionCompleta = reclamo.direccion;
+    return new Promise((resolve) => {
+        const direccionCompleta = reclamo.direccion;
+        
+        geocoder.geocode({ address: direccionCompleta }, (results, status) => {
+            if (status === 'OK') {
+                const location = results[0].geometry.location;
+                const estado = reclamo.estado || 'Sin tratamiento';
+                const color = COLORS[estado];
+                const tieneFoto = reclamo.foto ? true : false;
                 
-                geocoder.geocode({ address: direccionCompleta }, (results, status) => {
-                    if (status === 'OK') {
-                        const location = results[0].geometry.location;
-                        const estado = reclamo.estado || 'Sin tratamiento';
-                        const color = COLORS[estado];
-                        const tieneFoto = reclamo.foto ? true : false;
-                        
-                        let markerIcon;
-                        
-                        if (tieneFoto) {
-                            // Marcador con cámara
-                            const svgMarker = `
-                                <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
-                                    <!-- Círculo principal -->
-                                    <circle cx="12" cy="12" r="10" fill="${color}" stroke="white" stroke-width="2"/>
-                                    <!-- Ícono de cámara (arriba derecha) -->
-                                    <g transform="translate(16, 4)">
-                                        <circle cx="0" cy="0" r="4" fill="white"/>
-                                        <path d="M -2,-1 L -2,1 L 2,1 L 2,-1 Z M -1,-2 L 1,-2 L 1,-1 L -1,-1 Z" fill="${color}" transform="scale(0.8)"/>
-                                    </g>
-                                </svg>
-                            `;
-                            
-                            markerIcon = {
-                                url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgMarker),
-                                scaledSize: new google.maps.Size(24, 24),
-                                anchor: new google.maps.Point(12, 12)
-                            };
-                        } else {
-                            // Marcador normal sin cámara
-                            markerIcon = {
-                                path: google.maps.SymbolPath.CIRCLE,
-                                scale: 10,
-                                fillColor: color,
-                                fillOpacity: 0.9,
-                                strokeColor: '#ffffff',
-                                strokeWeight: 2
-                            };
-                        }
-                        
-                        const marker = new google.maps.Marker({
-                            position: location,
-                            map: map,
-                            title: reclamo.tema,
-                            icon: markerIcon
-                        });
-                        
-                        markers.push({
-                            marker: marker,
-                            estado: estado
-                        });
-                        
-                        // Construir HTML del InfoWindow
-                        let infoContent = '<div class="infowindow-container">';
-                        
-                        // Si tiene foto, mostrarla arriba
-                        if (reclamo.foto) {
-                            infoContent += `<img src="${reclamo.foto}" class="infowindow-image" alt="Foto del reclamo" onerror="this.style.display='none'">`;
-                        }
-                        
-                        infoContent += '<div class="infowindow-content">';
-                        infoContent += `<h3 class="infowindow-title">${reclamo.tema || 'Sin título'}</h3>`;
-                        
-                        // Agregar fecha
-                        if (reclamo.fecha) {
-                            const fechaFormateada = getRelativeTime(reclamo.fecha);
-                            if (fechaFormateada) {
-                                infoContent += `<p class="infowindow-date">${fechaFormateada}</p>`;
-                            }
-                        }
-                        
-                        infoContent += `<p class="infowindow-field"><strong>Reportado por:</strong> ${reclamo.nombre || 'Anónimo'}</p>`;
-                        infoContent += `<p class="infowindow-field"><strong>Dirección:</strong> ${reclamo.direccion}</p>`;
-                        infoContent += `<p class="infowindow-field"><strong>Descripción:</strong> ${reclamo.descripcion || 'Sin descripción'}</p>`;
-                        infoContent += `<span class="infowindow-badge" style="background: ${color};">${estado}</span>`;
-                        infoContent += '</div></div>';
-                        
-                        const infoWindow = new google.maps.InfoWindow({
-                            content: infoContent,
-                            maxWidth: 350,
-                            disableAutoPan: false
-                        });
-                        
-                        marker.addListener('click', () => {
-                            if (currentInfoWindow) {
-                                currentInfoWindow.close();
-                            }
-                            infoWindow.open(map, marker);
-                            currentInfoWindow = infoWindow;
-                        });
-                        
-                    } else {
-                        console.error('Geocoding falló para:', reclamo.direccion, status);
-                    }
-                    resolve();
+                let markerIcon;
+                
+                if (tieneFoto) {
+                    // Marcador con cámara más grande y visible
+                    const svgMarker = `
+                        <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Círculo principal -->
+                            <circle cx="14" cy="14" r="11" fill="${color}" stroke="white" stroke-width="2.5"/>
+                            <!-- Ícono de cámara (arriba derecha, más grande) -->
+                            <g transform="translate(20, 6)">
+                                <circle cx="0" cy="0" r="5.5" fill="white" stroke="${color}" stroke-width="1"/>
+                                <rect x="-3" y="-1.5" width="6" height="3" rx="0.5" fill="${color}"/>
+                                <rect x="-2" y="-2.5" width="4" height="1" rx="0.3" fill="${color}"/>
+                                <circle cx="0" cy="0" r="1.2" fill="white"/>
+                            </g>
+                        </svg>
+                    `;
+                    
+                    markerIcon = {
+                        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgMarker),
+                        scaledSize: new google.maps.Size(28, 28),
+                        anchor: new google.maps.Point(14, 14)
+                    };
+                } else {
+                    // Marcador normal sin cámara
+                    markerIcon = {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 10,
+                        fillColor: color,
+                        fillOpacity: 0.9,
+                        strokeColor: '#ffffff',
+                        strokeWeight: 2
+                    };
+                }
+                
+                const marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    title: reclamo.tema,
+                    icon: markerIcon
                 });
-            });
-        }
+                
+                markers.push({
+                    marker: marker,
+                    estado: estado
+                });
+                
+                // Construir HTML del InfoWindow
+                let infoContent = '<div class="infowindow-container">';
+                
+                // SI TIENE FOTO, MOSTRARLA ARRIBA
+                if (reclamo.foto) {
+                    infoContent += `<img src="${reclamo.foto}" class="infowindow-image" alt="Foto del reclamo" onerror="this.style.display='none'">`;
+                }
+                
+                infoContent += '<div class="infowindow-content">';
+                infoContent += `<h3 class="infowindow-title">${reclamo.tema || 'Sin título'}</h3>`;
+                
+                // Agregar fecha
+                if (reclamo.fecha) {
+                    const fechaFormateada = getRelativeTime(reclamo.fecha);
+                    if (fechaFormateada) {
+                        infoContent += `<p class="infowindow-date">${fechaFormateada}</p>`;
+                    }
+                }
+                
+                infoContent += `<p class="infowindow-field"><strong>Reportado por:</strong> ${reclamo.nombre || 'Anónimo'}</p>`;
+                infoContent += `<p class="infowindow-field"><strong>Dirección:</strong> ${reclamo.direccion}</p>`;
+                infoContent += `<p class="infowindow-field"><strong>Descripción:</strong> ${reclamo.descripcion || 'Sin descripción'}</p>`;
+                infoContent += `<span class="infowindow-badge" style="background: ${color};">${estado}</span>`;
+                infoContent += '</div></div>';
+                
+                const infoWindow = new google.maps.InfoWindow({
+                    content: infoContent,
+                    maxWidth: 350,
+                    disableAutoPan: false
+                });
+                
+                marker.addListener('click', () => {
+                    if (currentInfoWindow) {
+                        currentInfoWindow.close();
+                    }
+                    infoWindow.open(map, marker);
+                    currentInfoWindow = infoWindow;
+                });
+                
+            } else {
+                console.error('Geocoding falló para:', reclamo.direccion, status);
+            }
+            resolve();
+        });
+    });
+}
     </script>
     
     <script async defer
