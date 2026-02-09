@@ -353,11 +353,8 @@
         function addFilters() {
             const filtersDiv = document.createElement('div');
             
-            // Detectar si es mobile
-            const isMobile = window.innerWidth <= 768;
-            
-            // En mobile arranca colapsado, en desktop expandido
-            filtersDiv.className = isMobile ? 'filters collapsed' : 'filters';
+            // SIEMPRE arranca colapsado
+            filtersDiv.className = 'filters collapsed';
             
             filtersDiv.innerHTML = `
                 <h3>Filtrar por estado</h3>
@@ -410,16 +407,8 @@
                 
                 // Agregar en la posición correcta
                 if (currentMobile) {
-                    // Colapsar en mobile
-                    if (!filtersDiv.classList.contains('collapsed')) {
-                        filtersDiv.classList.add('collapsed');
-                    }
                     map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(filtersDiv);
                 } else {
-                    // Expandir en desktop
-                    if (filtersDiv.classList.contains('collapsed')) {
-                        filtersDiv.classList.remove('collapsed');
-                    }
                     map.controls[google.maps.ControlPosition.TOP_LEFT].push(filtersDiv);
                 }
             }
@@ -490,7 +479,7 @@
                 
                 geocoder.geocode({ address: direccionCompleta }, (results, status) => {
                     if (status === 'OK') {
-                        const location = results[0].geometry.location();
+                        const location = results[0].geometry.location;  // SIN paréntesis
                         const estado = reclamo.estado || 'Sin tratamiento';
                         const color = COLORS[estado];
                         
