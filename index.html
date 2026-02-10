@@ -40,6 +40,26 @@
             opacity: 0.9;
         }
         
+        #total-counter {
+            position: absolute;
+            top: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        #total-counter span {
+            color: #30115e;
+            font-weight: 700;
+        }
+        
         #map {
             height: calc(100vh - 120px);
             width: 100%;
@@ -327,6 +347,12 @@
         
         /* Estilos para mobile */
         @media (max-width: 768px) {
+            #total-counter {
+                top: 80px;
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+            
             .filters {
                 padding: 10px;
                 margin: 8px;
@@ -406,6 +432,10 @@
     <div id="header">
         <h1>🗺️ Mapa de Reclamos - San Isidro</h1>
         <p>Seguimiento en tiempo real de reclamos municipales</p>
+    </div>
+    
+    <div id="total-counter">
+        Reclamos: <span id="total-count">0</span>
     </div>
     
     <div id="loading">
@@ -540,6 +570,10 @@
             document.getElementById('count-sin').textContent = stateCounts['Sin tratamiento'];
             document.getElementById('count-proceso').textContent = stateCounts['En proceso'];
             document.getElementById('count-resuelto').textContent = stateCounts['Resuelto'];
+            
+            // Actualizar contador total
+            const total = stateCounts['Sin tratamiento'] + stateCounts['En proceso'] + stateCounts['Resuelto'];
+            document.getElementById('total-count').textContent = total;
         }
         
         function getRelativeTime(fechaString) {
@@ -754,51 +788,49 @@
         }
         
         function showReclamosList(reclamos, marker) {
-    let listContent = '<div class="reclamos-list">';
-    listContent += `<h3 class="reclamos-list-title">${reclamos.length} reclamos en esta ubicación</h3>`;
-    
-    reclamos.forEach((reclamo, index) => {
-        const estado = reclamo.estado || 'Sin tratamiento';
-        const color = COLORS[estado];
-        const fechaFormateada = getRelativeTime(reclamo.fecha);
-        
-        listContent += `
-            <div class="reclamo-item" data-index="${index}">
-                <div class="reclamo-item-title">${reclamo.tema || 'Sin título'}</div>
-                ${fechaFormateada ? `<div class="reclamo-item-date">${fechaFormateada}</div>` : ''}
-                <span class="reclamo-item-badge" style="background: ${color};">${estado}</span>
-            </div>
-        `;
-    });
-    
-    listContent += '</div>';
-    
-    const infoWindow = new google.maps.InfoWindow({
-        content: listContent,
-        maxWidth: 350
-    });
-    
-    infoWindow.open(map, marker);
-    currentInfoWindow = infoWindow;
-    
-    google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
-        const items = document.querySelectorAll('.reclamo-item');
-        items.forEach((item) => {
-            item.addEventListener('click', () => {
-                const index = parseInt(item.getAttribute('data-index'));
-                // Cerrar la lista antes de abrir el detalle
-                if (currentInfoWindow) {
-                    currentInfoWindow.close();
-                    currentInfoWindow = null;
-                }
-                // Pequeño delay para que se vea suave la transición
-                setTimeout(() => {
-                    showReclamoDetail(reclamos[index], marker);
-                }, 100);
+            let listContent = '<div class="reclamos-list">';
+            listContent += `<h3 class="reclamos-list-title">${reclamos.length} reclamos en esta ubicación</h3>`;
+            
+            reclamos.forEach((reclamo, index) => {
+                const estado = reclamo.estado || 'Sin tratamiento';
+                const color = COLORS[estado];
+                const fechaFormateada = getRelativeTime(reclamo.fecha);
+                
+                listContent += `
+                    <div class="reclamo-item" data-index="${index}">
+                        <div class="reclamo-item-title">${reclamo.tema || 'Sin título'}</div>
+                        ${fechaFormateada ? `<div class="reclamo-item-date">${fechaFormateada}</div>` : ''}
+                        <span class="reclamo-item-badge" style="background: ${color};">${estado}</span>
+                    </div>
+                `;
             });
-        });
-    });
-}
+            
+            listContent += '</div>';
+            
+            const infoWindow = new google.maps.InfoWindow({
+                content: listContent,
+                maxWidth: 350
+            });
+            
+            infoWindow.open(map, marker);
+            currentInfoWindow = infoWindow;
+            
+            google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
+                const items = document.querySelectorAll('.reclamo-item');
+                items.forEach((item) => {
+                    item.addEventListener('click', () => {
+                        const index = parseInt(item.getAttribute('data-index'));
+                        if (currentInfoWindow) {
+                            currentInfoWindow.close();
+                            currentInfoWindow = null;
+                        }
+                        setTimeout(() => {
+                            showReclamoDetail(reclamos[index], marker);
+                        }, 100);
+                    });
+                });
+            });
+        }
         
         function showReclamoDetail(reclamo, marker) {
             const estado = reclamo.estado || 'Sin tratamiento';
