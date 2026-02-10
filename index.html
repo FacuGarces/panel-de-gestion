@@ -614,30 +614,46 @@
         /* Selector de estado en InfoWindow */
         .estado-selector {
             padding: 8px 30px 8px 12px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 6px;
             font-family: 'Montserrat', sans-serif;
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            background: white;
             transition: all 0.2s ease;
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 10px center;
+            background-size: 12px;
+        }
+        
+        /* Flechita blanca que se ve en cualquier fondo de color */
+        .estado-selector {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='white' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
         }
         
         .estado-selector:hover {
-            border-color: #30115e;
+            border-color: rgba(255, 255, 255, 0.5);
         }
         
         .estado-selector:focus {
             outline: none;
-            border-color: #30115e;
-            box-shadow: 0 0 0 3px rgba(48, 17, 94, 0.1);
+            border-color: white;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Estilos para las opciones del dropdown */
+        .estado-selector option {
+            background: white;
+            color: #333;
+            padding: 8px;
+            font-weight: 600;
+        }
+        
+        .estado-selector option:hover {
+            background: #f3f4f6;
         }
         
         /* Ocultar el botón de cerrar del InfoWindow */
@@ -1613,7 +1629,7 @@
             infoContent += `<p class="infowindow-field"><strong>Dirección:</strong> ${reclamo.direccion}</p>`;
             infoContent += `<p class="infowindow-field"><strong>Descripción:</strong> ${reclamo.descripcion || 'Sin descripción'}</p>`;
             infoContent += `
-                <select class="estado-selector" id="estado-selector-${reclamo.id}" style="background: ${color}; color: white;" 
+                <select class="estado-selector" id="estado-selector-${reclamo.id}" style="background-color: ${color}; color: white;" 
                         onchange="cambiarEstado('${reclamo.id}', this.value)">
                     <option value="Sin tratamiento" ${estado === 'Sin tratamiento' ? 'selected' : ''}>Sin tratamiento</option>
                     <option value="En proceso" ${estado === 'En proceso' ? 'selected' : ''}>En proceso</option>
@@ -1819,7 +1835,7 @@ _La Libertad Avanza - San Isidro_`;
             const selector = document.getElementById(`estado-selector-${id}`);
             if (selector) {
                 const color = COLORS[nuevoEstado];
-                selector.style.background = color;
+                selector.style.backgroundColor = color;
             }
             
             // Actualizar en el servidor y marcadores
