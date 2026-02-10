@@ -41,18 +41,15 @@
         }
         
         #total-counter {
-            position: absolute;
-            top: 90px;
-            left: 50%;
-            transform: translateX(-50%);
             background: white;
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            z-index: 1000;
             font-size: 16px;
             font-weight: 600;
             color: #333;
+            margin: 10px;
+            max-width: 250px;
         }
         
         #total-counter span {
@@ -348,9 +345,10 @@
         /* Estilos para mobile */
         @media (max-width: 768px) {
             #total-counter {
-                top: 80px;
                 font-size: 14px;
-                padding: 8px 16px;
+                padding: 10px 16px;
+                margin: 8px;
+                max-width: 160px;
             }
             
             .filters {
@@ -434,10 +432,6 @@
         <p>Seguimiento en tiempo real de reclamos municipales</p>
     </div>
     
-    <div id="total-counter">
-        Reclamos: <span id="total-count">0</span>
-    </div>
-    
     <div id="loading">
         <div class="spinner"></div>
         <p>Cargando reclamos...</p>
@@ -498,8 +492,12 @@
         
         function addFilters() {
             const filtersDiv = document.createElement('div');
-            
             filtersDiv.className = 'filters collapsed';
+            
+            // Crear contador total
+            const totalCounterDiv = document.createElement('div');
+            totalCounterDiv.id = 'total-counter';
+            totalCounterDiv.innerHTML = 'Reclamos: <span id="total-count">0</span>';
             
             filtersDiv.innerHTML = `
                 <h3>Filtrar por estado</h3>
@@ -542,21 +540,23 @@
                 });
             });
             
-            function updateFilterPosition() {
+            function updateControlsPosition() {
                 const currentMobile = window.innerWidth <= 768;
                 
                 map.controls[google.maps.ControlPosition.TOP_LEFT].clear();
                 map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].clear();
                 
                 if (currentMobile) {
+                    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(totalCounterDiv);
                     map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(filtersDiv);
                 } else {
+                    map.controls[google.maps.ControlPosition.TOP_LEFT].push(totalCounterDiv);
                     map.controls[google.maps.ControlPosition.TOP_LEFT].push(filtersDiv);
                 }
             }
             
-            updateFilterPosition();
-            window.addEventListener('resize', updateFilterPosition);
+            updateControlsPosition();
+            window.addEventListener('resize', updateControlsPosition);
         }
         
         function updateMarkers() {
@@ -681,7 +681,7 @@
                 
                 geocoder.geocode({ address: direccionCompleta }, (results, status) => {
                     if (status === 'OK') {
-                        const location = results[0].geometry.location;
+                        const location = results[0].geometry.location();
                         const estado = reclamo.estado || 'Sin tratamiento';
                         
                         reclamosData.push({
