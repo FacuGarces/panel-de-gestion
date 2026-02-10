@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mapa de Reclamos - San Isidro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -655,6 +655,10 @@
             color: #333;
             font-size: 16px;
             font-weight: 600;
+            padding-right: 50px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.4;
         }
         
         .infowindow-date {
@@ -938,7 +942,7 @@
             <div class="share-numero-input-container" id="share-numero-container">
                 <div class="share-numero-label">Ingrese el número de reclamo de la Municipalidad:</div>
                 <div class="share-numero-help">
-                    💡 <strong>Recordá:</strong> Llamá al <strong>*147</strong> para elevar el reclamo a la municipalidad y obtener este número
+                    <strong>Recordá:</strong> Llamá al <strong>*147</strong> para elevar el reclamo a la municipalidad y obtener este número
                 </div>
                 <input type="text" class="share-numero-input" id="share-numero-input" placeholder="Número de reclamo">
                 <div class="share-numero-buttons">
@@ -1548,6 +1552,7 @@
                 fecha: reclamo.fecha,
                 estado: reclamo.estado,
                 numeroReclamo: reclamo.numeroReclamo,
+                mensajeEnviado: reclamo.mensajeEnviado,
                 whatsappMessage: whatsappMessage
             };
             
@@ -1604,9 +1609,8 @@
             document.getElementById('share-numero-container').classList.remove('active');
             document.getElementById('share-numero-input').value = '';
             
-            // Verificar si ya se envió mensaje al vecino para este reclamo
-            const yaEnviado = localStorage.getItem(`mensaje_enviado_${reclamoData.id}`);
-            if (yaEnviado) {
+            // Verificar si ya se envió mensaje al vecino (desde el Sheet, no localStorage)
+            if (reclamoData.mensajeEnviado && reclamoData.mensajeEnviado.toLowerCase() === 'sí') {
                 document.getElementById('share-warning').classList.add('active');
             } else {
                 document.getElementById('share-warning').classList.remove('active');
@@ -1715,18 +1719,30 @@ _La Libertad Avanza - San Isidro_`;
                 // Ya está bien
             }
             
-            // Abrir WhatsApp con el número del vecino
-            const whatsappUrl = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
-            window.open(whatsappUrl, '_blank');
-            
-            // Guardar en localStorage que se envió el mensaje
-            localStorage.setItem(`mensaje_enviado_${currentReclamoData.id}`, 'true');
-            
-            // Mostrar advertencia
-            document.getElementById('share-warning').classList.add('active');
-            
-            // Cerrar modal
+            // Cerrar modal ANTES de abrir WhatsApp (evita problemas de zoom)
             document.getElementById('share-modal').classList.remove('active');
+            
+            // Detectar si es mobile
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            // Pequeño delay para que el modal se cierre antes
+            setTimeout(() => {
+                if (isMobile) {
+                    // En mobile, usar el protocolo de WhatsApp directamente
+                    const whatsappUrl = `whatsapp://send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
+                    window.location.href = whatsappUrl;
+                    
+                    // Fallback a web.whatsapp si la app no está instalada
+                    setTimeout(() => {
+                        const webUrl = `https://api.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
+                        window.open(webUrl, '_blank');
+                    }, 1000);
+                } else {
+                    // En desktop, usar web.whatsapp
+                    const whatsappUrl = `https://web.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
+                    window.open(whatsappUrl, '_blank');
+                }
+            }, 100);
         }
         
         // Función para guardar el número de reclamo en el Sheet
