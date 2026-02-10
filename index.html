@@ -1840,31 +1840,37 @@ _La Libertad Avanza - San Isidro_`;
                 if (lastDataHash !== null && newHash !== lastDataHash) {
                     console.log('🔄 Cambios detectados, actualizando mapa...');
                     
-                    // Actualizar reclamosData con los nuevos datos (sin re-geocodificar)
-                    reclamosData.forEach(item => {
-                        const updated = newData.find(r => r.id === item.id);
-                        if (updated) {
-                            // Actualizar solo los datos que pueden cambiar
-                            item.estado = updated.estado || 'Sin tratamiento';
-                            item.numeroReclamo = updated.numeroReclamo || '';
-                            item.mensajeEnviado = updated.mensajeEnviado || '';
-                            item.tema = updated.tema || '';
-                            item.descripcion = updated.descripcion || '';
-                        }
-                    });
-                    
                     // Verificar si hay nuevos reclamos (que SÍ necesitan geocoding)
                     const existingIds = reclamosData.map(r => r.id);
-                    const newReclamos = newData.filter(r => !existingIds.includes(r.id));
+                    const newReclamos = newData.filter(r => r.id && !existingIds.includes(r.id));
                     
                     if (newReclamos.length > 0) {
-                        console.log(`📍 ${newReclamos.length} reclamo(s) nuevo(s), geocodificando...`);
+                        console.log(`📍 ${newReclamos.length} reclamo(s) nuevo(s) detectado(s), geocodificando...`);
                         
                         // Geocodificar solo los nuevos
                         for (const reclamo of newReclamos) {
                             await geocodeReclamo(reclamo);
                         }
+                        
+                        console.log(`✅ Nuevos reclamos geocodificados. Total: ${reclamosData.length}`);
                     }
+                    
+                    // Actualizar TODOS los campos de los reclamos existentes
+                    reclamosData.forEach(item => {
+                        const updated = newData.find(r => r.id === item.id);
+                        if (updated) {
+                            // Actualizar TODOS los campos que pueden cambiar
+                            item.estado = updated.estado || 'Sin tratamiento';
+                            item.numeroReclamo = updated.numeroReclamo || '';
+                            item.mensajeEnviado = updated.mensajeEnviado || '';
+                            item.tema = updated.tema || '';
+                            item.descripcion = updated.descripcion || '';
+                            item.nombre = updated.nombre || '';
+                            item.fecha = updated.fecha || null;
+                            item.foto = updated.foto || null;
+                            item.telefono = updated.telefono || '';
+                        }
+                    });
                     
                     // Guardar centro y zoom actuales
                     const currentCenter = map.getCenter();
@@ -1913,7 +1919,7 @@ _La Libertad Avanza - San Isidro_`;
                     // Mostrar notificación
                     showUpdateNotification();
                     
-                    console.log('✅ Mapa actualizado');
+                    console.log('✅ Mapa actualizado. Total reclamos: ' + reclamosData.length);
                 }
                 
                 lastDataHash = newHash;
