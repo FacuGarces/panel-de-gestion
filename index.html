@@ -191,35 +191,30 @@
         
         /* Botón de centrar mapa */
         .center-map-btn {
-            background: white;
-            padding: 12px 16px;
-            border-radius: 8px;
+            background: #30115e;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            color: #30115e;
-            border: 2px solid #30115e;
+            justify-content: center;
             margin: 10px;
             user-select: none;
+            border: none;
         }
         
         .center-map-btn:hover {
-            background: #30115e;
-            color: white;
-            transform: translateY(-2px);
+            background: #4a1d7a;
             box-shadow: 0 4px 15px rgba(48, 17, 94, 0.3);
         }
         
         .center-map-btn svg {
-            width: 20px;
-            height: 20px;
-            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            fill: white;
         }
         
         /* Ocultar el botón de cerrar del InfoWindow */
@@ -430,14 +425,14 @@
             }
             
             .center-map-btn {
-                padding: 10px 14px;
-                font-size: 13px;
+                width: 44px;
+                height: 44px;
                 margin: 8px;
             }
             
             .center-map-btn svg {
-                width: 18px;
-                height: 18px;
+                width: 22px;
+                height: 22px;
             }
             
             .infowindow-container {
@@ -531,7 +526,6 @@
             });
             
             addFilters();
-            addCenterMapButton();
             loadReclamos();
         }
         
@@ -585,6 +579,8 @@
                 });
             });
             
+            const centerBtn = addCenterMapButton();
+            
             function updateControlsPosition() {
                 const currentMobile = window.innerWidth <= 768;
                 
@@ -595,11 +591,13 @@
                 map.controls[google.maps.ControlPosition.TOP_LEFT].push(totalCounterDiv);
                 
                 if (currentMobile) {
-                    // En mobile, filtro abajo a la derecha
+                    // En mobile, filtro y botón abajo a la derecha
                     map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(filtersDiv);
+                    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(centerBtn);
                 } else {
-                    // En desktop, filtro también arriba a la izquierda
+                    // En desktop, filtro arriba a la izquierda, botón abajo a la derecha
                     map.controls[google.maps.ControlPosition.TOP_LEFT].push(filtersDiv);
+                    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(centerBtn);
                 }
             }
             
@@ -611,16 +609,15 @@
             const centerBtn = document.createElement('div');
             centerBtn.className = 'center-map-btn';
             centerBtn.innerHTML = `
-                <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
                 </svg>
-                <span>Ver todos</span>
             `;
+            centerBtn.title = 'Ver todos los reclamos';
             
             centerBtn.addEventListener('click', centerMapOnMarkers);
             
-            // Agregar el botón a RIGHT_BOTTOM
-            map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(centerBtn);
+            return centerBtn;
         }
         
         function centerMapOnMarkers() {
