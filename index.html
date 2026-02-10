@@ -576,6 +576,26 @@
             background: #d1d5db;
         }
         
+        .share-warning {
+            display: none;
+            padding: 12px;
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #92400e;
+        }
+        
+        .share-warning.active {
+            display: block;
+        }
+        
+        .share-warning strong {
+            color: #78350f;
+            font-weight: 700;
+        }
+        
         /* Ocultar el botón de cerrar del InfoWindow */
         .gm-style-iw-chr {
             display: none !important;
@@ -907,6 +927,10 @@
                     <button class="share-numero-btn share-numero-btn-cancel" id="share-numero-cancel">Cancelar</button>
                     <button class="share-numero-btn share-numero-btn-save" id="share-numero-save">Guardar y Enviar</button>
                 </div>
+            </div>
+            
+            <div class="share-warning" id="share-warning">
+                ⚠️ <strong>Ya se envió un mensaje al vecino para este reclamo.</strong> Si necesitás enviarlo nuevamente, seleccioná la opción que desees.
             </div>
             
             <button class="share-modal-close" id="close-share-modal">Cerrar</button>
@@ -1499,6 +1523,7 @@
             const reclamoData = {
                 id: reclamo.id,
                 nombre: reclamo.nombre,
+                telefono: reclamo.telefono,
                 tema: reclamo.tema,
                 descripcion: reclamo.descripcion,
                 direccion: reclamo.direccion,
@@ -1560,6 +1585,14 @@
             document.getElementById('share-modal').classList.add('active');
             document.getElementById('share-numero-container').classList.remove('active');
             document.getElementById('share-numero-input').value = '';
+            
+            // Verificar si ya se envió mensaje al vecino para este reclamo
+            const yaEnviado = localStorage.getItem(`mensaje_enviado_${reclamoData.id}`);
+            if (yaEnviado) {
+                document.getElementById('share-warning').classList.add('active');
+            } else {
+                document.getElementById('share-warning').classList.remove('active');
+            }
         }
         
         // Cerrar modal
@@ -1646,8 +1679,31 @@ Podés hacer el seguimiento de tu reclamo con este número. ¡Gracias por tu par
 
 _La Libertad Avanza - San Isidro_`;
             
-            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
+            // Limpiar el número de teléfono (quitar espacios, guiones, etc)
+            let telefono = currentReclamoData.telefono.replace(/\D/g, '');
+            
+            // Si el número tiene 10 dígitos y empieza con 0, quitarle el 0 y agregar 54
+            if (telefono.length === 10 && telefono.startsWith('0')) {
+                telefono = '54' + telefono.substring(1);
+            }
+            // Si tiene 10 dígitos y NO empieza con 0, agregar 54
+            else if (telefono.length === 10) {
+                telefono = '54' + telefono;
+            }
+            // Si ya tiene el código de país (54), dejarlo como está
+            else if (telefono.startsWith('54')) {
+                // Ya está bien
+            }
+            
+            // Abrir WhatsApp con el número del vecino
+            const whatsappUrl = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
             window.open(whatsappUrl, '_blank');
+            
+            // Guardar en localStorage que se envió el mensaje
+            localStorage.setItem(`mensaje_enviado_${currentReclamoData.id}`, 'true');
+            
+            // Mostrar advertencia
+            document.getElementById('share-warning').classList.add('active');
             
             // Cerrar modal
             document.getElementById('share-modal').classList.remove('active');
