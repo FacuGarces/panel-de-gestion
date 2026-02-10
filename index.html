@@ -611,23 +611,23 @@
             font-weight: 700;
         }
         
-        /* Auto-refresh */
+        /* Auto-refresh notificación */
         .auto-refresh-indicator {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background: rgba(48, 17, 94, 0.95);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             display: none;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             z-index: 2000;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
-            color: #333;
         }
         
         .auto-refresh-indicator.active {
@@ -635,45 +635,16 @@
         }
         
         .auto-refresh-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background: #10b981;
-            animation: pulse 2s ease-in-out infinite;
+            animation: pulse 1.5s ease-in-out infinite;
         }
         
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
-        .auto-refresh-toggle {
-            background: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 10px;
-            border: none;
-            transition: all 0.2s ease;
-        }
-        
-        .auto-refresh-toggle:hover {
-            background: #f3f4f6;
-        }
-        
-        .auto-refresh-toggle svg {
-            width: 20px;
-            height: 20px;
-            fill: #30115e;
-        }
-        
-        .auto-refresh-toggle.paused svg {
-            fill: #6b7280;
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.8); }
         }
         
         /* Ocultar el botón de cerrar del InfoWindow */
@@ -1438,7 +1409,6 @@
                 
                 // Inicializar auto-refresh
                 lastDataHash = getDataHash(reclamos);
-                addAutoRefreshToggle();
                 startAutoRefresh();
                 
             } catch (error) {
@@ -1849,24 +1819,23 @@ _La Libertad Avanza - San Isidro_`;
         // ============================================
         
         let autoRefreshInterval = null;
-        let autoRefreshEnabled = true;
         let lastDataHash = null;
-        const AUTO_REFRESH_INTERVAL = 30000; // 30 segundos
+        const AUTO_REFRESH_INTERVAL = 15000; // 15 segundos
         
         // Función para calcular un hash simple de los datos
         function getDataHash(data) {
+            // Hash basado en cantidad y contenido relevante
             return JSON.stringify(data.map(r => ({
                 id: r.id,
                 estado: r.estado,
                 numeroReclamo: r.numeroReclamo,
-                mensajeEnviado: r.mensajeEnviado
-            }))).length;
+                tema: r.tema,
+                descripcion: r.descripcion
+            })));
         }
         
         // Función para actualizar el mapa con nuevos datos
         async function checkForUpdates() {
-            if (!autoRefreshEnabled) return;
-            
             try {
                 const response = await fetch('https://script.google.com/macros/s/AKfycbzAW53ehSqPdkudN5mkyValqSId0xCn7H7NLnvMEpMbkoUeA-0uNBewnuAmruhARzwq/exec');
                 const data = await response.json();
@@ -1875,7 +1844,7 @@ _La Libertad Avanza - San Isidro_`;
                 
                 // Solo actualizar si hay cambios
                 if (lastDataHash !== null && newHash !== lastDataHash) {
-                    console.log('Detectados cambios en el Sheet, actualizando mapa...');
+                    console.log('🔄 Cambios detectados, actualizando mapa...');
                     
                     // Guardar el estado actual del mapa (centro y zoom)
                     const currentCenter = map.getCenter();
@@ -1927,14 +1896,16 @@ _La Libertad Avanza - San Isidro_`;
                     map.setCenter(currentCenter);
                     map.setZoom(currentZoom);
                     
-                    // Mostrar notificación
+                    // Mostrar notificación discreta
                     showUpdateNotification();
+                    
+                    console.log('✅ Mapa actualizado');
                 }
                 
                 lastDataHash = newHash;
                 
             } catch (error) {
-                console.error('Error al verificar actualizaciones:', error);
+                console.error('❌ Error al verificar actualizaciones:', error);
             }
         }
         
@@ -1945,44 +1916,13 @@ _La Libertad Avanza - San Isidro_`;
             
             setTimeout(() => {
                 indicator.classList.remove('active');
-            }, 3000);
-        }
-        
-        // Agregar botón de toggle para auto-refresh
-        function addAutoRefreshToggle() {
-            const toggleBtn = document.createElement('button');
-            toggleBtn.className = 'auto-refresh-toggle';
-            toggleBtn.title = 'Auto-actualización activada';
-            toggleBtn.innerHTML = `
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
-                </svg>
-            `;
-            
-            toggleBtn.addEventListener('click', () => {
-                autoRefreshEnabled = !autoRefreshEnabled;
-                
-                if (autoRefreshEnabled) {
-                    toggleBtn.classList.remove('paused');
-                    toggleBtn.title = 'Auto-actualización activada';
-                    console.log('Auto-refresh activado');
-                } else {
-                    toggleBtn.classList.add('paused');
-                    toggleBtn.title = 'Auto-actualización pausada';
-                    console.log('Auto-refresh pausado');
-                }
-            });
-            
-            map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(toggleBtn);
-            
-            return toggleBtn;
+            }, 2000);
         }
         
         // Iniciar auto-refresh
         function startAutoRefresh() {
-            // Primera verificación después de 30 segundos
             autoRefreshInterval = setInterval(checkForUpdates, AUTO_REFRESH_INTERVAL);
-            console.log('Auto-refresh iniciado (cada 30 segundos)');
+            console.log('🔄 Auto-refresh activado (cada 15 segundos)');
         }
     </script>
     
