@@ -772,9 +772,6 @@
                     
                     const percentage = Math.round((processed / reclamos.length) * 100);
                     
-                    // Pequeño delay para que la barra se vea avanzar suavemente
-                    await new Promise(resolve => setTimeout(resolve, 50));
-                    
                     document.getElementById('loading-text').textContent = `Procesando reclamos...`;
                     document.getElementById('progress-bar').style.width = percentage + '%';
                     document.getElementById('progress-text').textContent = `${processed}/${reclamos.length} (${percentage}%)`;
