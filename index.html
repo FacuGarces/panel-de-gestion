@@ -191,11 +191,11 @@
         
         /* Botón de centrar mapa */
         .center-map-btn {
-            background: #30115e;
-            width: 48px;
-            height: 48px;
+            background: white;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
@@ -207,13 +207,17 @@
         }
         
         .center-map-btn:hover {
-            background: #4a1d7a;
-            box-shadow: 0 4px 15px rgba(48, 17, 94, 0.3);
+            background: #30115e;
         }
         
         .center-map-btn svg {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
+            fill: #30115e;
+            transition: fill 0.2s ease;
+        }
+        
+        .center-map-btn:hover svg {
             fill: white;
         }
         
@@ -425,14 +429,14 @@
             }
             
             .center-map-btn {
-                width: 44px;
-                height: 44px;
+                width: 40px;
+                height: 40px;
                 margin: 8px;
             }
             
             .center-map-btn svg {
-                width: 22px;
-                height: 22px;
+                width: 20px;
+                height: 20px;
             }
             
             .infowindow-container {
@@ -591,9 +595,9 @@
                 map.controls[google.maps.ControlPosition.TOP_LEFT].push(totalCounterDiv);
                 
                 if (currentMobile) {
-                    // En mobile, filtro y botón abajo a la derecha
-                    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(filtersDiv);
+                    // En mobile, botón y filtro abajo a la derecha (botón primero para que quede abajo)
                     map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(centerBtn);
+                    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(filtersDiv);
                 } else {
                     // En desktop, filtro arriba a la izquierda, botón abajo a la derecha
                     map.controls[google.maps.ControlPosition.TOP_LEFT].push(filtersDiv);
