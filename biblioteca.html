@@ -523,16 +523,28 @@ async function loadProyectos() {
     }
 }
 
-async function apiGet(params) {
-    const url = new URL(SHEET_URL);
-    Object.entries(params).forEach(([k, v]) => {
-        if (v !== null && v !== undefined && v !== '') {
-            url.searchParams.set(k, v);
-        }
-    });
-    const res  = await fetch(url.toString());
-    const data = await res.json();
-    return data;
+async function apiCall(params) {
+    const { pdfBase64, ...rest } = params;
+
+    if (pdfBase64) {
+        // PDF va por POST (evita limite de URL)
+        const res = await fetch(SHEET_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(params)
+        });
+        return await res.json();
+    } else {
+        // Sin PDF: GET normal con params
+        const url = new URL(SHEET_URL);
+        Object.entries(rest).forEach(([k, v]) => {
+            if (v !== null && v !== undefined && v !== '') {
+                url.searchParams.set(k, v);
+            }
+        });
+        const res  = await fetch(url.toString());
+        return await res.json();
+    }
 }
 
 function fileToBase64(file) {
@@ -669,7 +681,7 @@ async function cambiarEstado(id, nuevoEstado) {
     if (p) p.estado = nuevoEstado;
     renderAll();
     try {
-        await apiGet({ action: 'updateEstado', id, estado: nuevoEstado });
+        await apiCall({ action: 'updateEstado', id, estado: nuevoEstado });
     } catch (err) {
         showToast('Error al guardar el estado', 'error');
     }
@@ -702,7 +714,7 @@ async function doDelete() {
     document.getElementById('confirm-modal').classList.remove('active');
     showLoading('Eliminando proyecto...');
     try {
-        await apiGet({ action: 'delete', id: deleteId });
+        await apiCall({ action: 'delete', id: deleteId });
         proyectos = proyectos.filter(x => String(x.id) !== String(deleteId));
         deleteId = null;
         renderAll();
@@ -775,7 +787,7 @@ async function saveForm() {
             pdfName:     existing?.pdfName || ''
         };
 
-        await apiGet(body);
+        await apiCall(body);
         closeFormModal();
         showToast(editingId ? 'Proyecto actualizado ✓' : 'Proyecto creado ✓', 'success');
         await loadProyectos(); // recargar para tener la pdfUrl real del Drive
