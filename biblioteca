@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Biblioteca de Proyectos - San Isidro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --purple: #30115e;
+            --purple-light: #4a1d7a;
+            --purple-faint: #f3eeff;
+            --red: #ef4444;
+            --orange: #f97316;
+            --green: #22c55e;
+            --blue: #3b82f6;
+            --yellow: #eab308;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-400: #9ca3af;
+            --gray-600: #4b5563;
+            --gray-800: #1f2937;
+            --shadow: rgba(0,0,0,0.3) 0px 1px 4px -1px;
+            --radius: 8px;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f0edf6;
+            min-height: 100vh;
+            color: var(--gray-800);
+        }
+
+        /* ─── HEADER ─── */
+        #header {
+            background: var(--purple);
+            color: white;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .back-btn:hover { background: rgba(255,255,255,0.2); }
+
+        .back-btn svg { width: 20px; height: 20px; fill: white; }
+
+        .header-titles h1 {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .header-titles p {
+            font-size: 12px;
+            opacity: 0.7;
+            font-weight: 400;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ─── TOOLBAR ─── */
+        .toolbar {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 73px;
+            z-index: 90;
+        }
+
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--gray-50);
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 8px 14px;
+            min-width: 220px;
+            transition: border-color 0.2s;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--purple);
+        }
+
+        .search-box svg { width: 16px; height: 16px; fill: var(--gray-400); flex-shrink: 0; }
+
+        .search-box input {
+            border: none;
+            background: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-800);
+            outline: none;
+            width: 100%;
+        }
+
+        .search-box input::placeholder { color: var(--gray-400); }
+
+        .filter-select {
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-800);
+            background: var(--gray-50);
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .filter-select:focus { border-color: var(--purple); }
+
+        /* ─── BOTÓN NUEVO ─── */
+        .btn-nuevo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--purple);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .btn-nuevo:hover { background: var(--purple-light); transform: translateY(-1px); }
+        .btn-nuevo svg { width: 18px; height: 18px; fill: white; }
+
+        /* ─── MAIN ─── */
+        .main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* ─── STATS ─── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 16px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gray-400);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--purple);
+            line-height: 1;
+        }
+
+        .stat-sub {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--gray-400);
+        }
+
+        /* ─── LISTA DE PROYECTOS ─── */
+        .projects-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .projects-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .count-badge {
+            background: var(--purple-faint);
+            color: var(--purple);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 100px;
+        }
+
+        .projects-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--gray-400);
+        }
+
+        .empty-state .empty-icon { font-size: 48px; margin-bottom: 16px; }
+        .empty-state h3 { font-size: 18px; font-weight: 700; color: var(--gray-600); margin-bottom: 8px; }
+        .empty-state p { font-size: 14px; }
+
+        /* ─── TARJETA DE PROYECTO ─── */
+        .project-card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border-left: 4px solid var(--gray-200);
+            transition: all 0.2s;
+        }
+
+        .project-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            transform: translateY(-1px);
+        }
+
+        .project-card-inner {
+            padding: 16px 18px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            align-items: start;
+        }
+
+        .project-main {}
+
+        .project-top {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+
+        .project-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--gray-800);
+            flex: 1;
+            min-width: 0;
+        }
+
+        .project-meta {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: var(--gray-400);
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .meta-item svg { width: 13px; height: 13px; fill: var(--gray-400); }
+
+        .project-desc {
+            font-size: 13px;
+            color: var(--gray-600);
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .project-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .estado-badge-select {
+            border: none;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 6px;
+        }
+
+        .icon-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 2px solid var(--gray-200);
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            padding: 0;
+        }
+
+        .icon-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+
+        .icon-btn svg { width: 16px; height: 16px; }
+
+        .icon-btn-preview { border-color: var(--purple); }
+        .icon-btn-preview svg { fill: var(--purple); }
+        .icon-btn-preview:hover { background: var(--purple); }
+        .icon-btn-preview:hover svg { fill: white; }
+
+        .icon-btn-download { border-color: var(--green); }
+        .icon-btn-download svg { fill: var(--green); }
+        .icon-btn-download:hover { background: var(--green); }
+        .icon-btn-download:hover svg { fill: white; }
+
+        .icon-btn-delete { border-color: var(--red); }
+        .icon-btn-delete svg { fill: var(--red); }
+        .icon-btn-delete:hover { background: var(--red); }
+        .icon-btn-delete:hover svg { fill: white; }
+
+        .icon-btn-edit { border-color: var(--orange); }
+        .icon-btn-edit svg { fill: var(--orange); }
+        .icon-btn-edit:hover { background: var(--orange); }
+        .icon-btn-edit:hover svg { fill: white; }
+
+        /* ─── ESTADOS ─── */
+        .estado-Presentado   { background: #e0f2fe; color: #0369a1; }
+        .estado-EnRevision   { background: #fef9c3; color: #854d0e; }
+        .estado-EnComision   { background: #ede9fe; color: #6d28d9; }
+        .estado-Aprobado     { background: #dcfce7; color: #15803d; }
+        .estado-Rechazado    { background: #fee2e2; color: #b91c1c; }
+        .estado-Archivado    { background: #f3f4f6; color: #6b7280; }
+
+        .border-Presentado   { border-left-color: #0369a1; }
+        .border-EnRevision   { border-left-color: #eab308; }
+        .border-EnComision   { border-left-color: #7c3aed; }
+        .border-Aprobado     { border-left-color: #22c55e; }
+        .border-Rechazado    { border-left-color: #ef4444; }
+        .border-Archivado    { border-left-color: #9ca3af; }
+
+        /* ─── MODAL BASE ─── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            overflow: hidden;
+            animation: modalIn 0.25s ease;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-header {
+            background: var(--purple);
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title { font-size: 16px; font-weight: 700; color: white; }
+
+        .modal-close {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            border: none;
+            cursor: pointer;
+            color: white;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            line-height: 1;
+        }
+
+        .modal-close:hover { background: rgba(255,255,255,0.25); }
+
+        .modal-body { padding: 24px; }
+
+        /* ─── FORM ─── */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group.full { grid-column: 1 / -1; }
+
+        .form-label { font-size: 12px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-800);
+            background: var(--gray-50);
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus { border-color: var(--purple); background: white; }
+
+        .form-textarea { resize: vertical; min-height: 80px; }
+
+        /* ─── ZONA DE UPLOAD ─── */
+        .upload-zone {
+            border: 2px dashed var(--gray-200);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--gray-50);
+            position: relative;
+        }
+
+        .upload-zone:hover { border-color: var(--purple); background: var(--purple-faint); }
+        .upload-zone.drag-over { border-color: var(--purple); background: var(--purple-faint); }
+        .upload-zone.has-file { border-color: var(--green); background: #f0fdf4; }
+
+        .upload-zone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-icon { font-size: 32px; margin-bottom: 10px; }
+
+        .upload-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-600);
+            margin-bottom: 4px;
+        }
+
+        .upload-sub { font-size: 12px; color: var(--gray-400); }
+
+        .upload-filename {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--green);
+            margin-top: 8px;
+            display: none;
+        }
+
+        /* ─── MODAL FOOTER ─── */
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel { background: var(--gray-100); color: var(--gray-600); }
+        .btn-cancel:hover { background: var(--gray-200); }
+
+        .btn-save { background: var(--purple); color: white; }
+        .btn-save:hover { background: var(--purple-light); }
+
+        /* ─── MODAL PREVIEW ─── */
+        .preview-modal .modal { max-width: 90vw; max-height: 90vh; display: flex; flex-direction: column; }
+        .preview-modal .modal-body { flex: 1; padding: 0; overflow: hidden; }
+
+        .pdf-frame {
+            width: 100%;
+            height: 75vh;
+            border: none;
+            display: block;
+        }
+
+        /* ─── FORM MODAL SIZE ─── */
+        .form-modal .modal { max-width: 580px; }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 600px) {
+            .toolbar { padding: 10px 14px; }
+            .main { padding: 14px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .header-titles h1 { font-size: 15px; }
+            .project-card-inner { grid-template-columns: 1fr; }
+            .project-actions { flex-direction: row; align-items: center; justify-content: space-between; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div id="header">
+        <div class="header-left">
+            <a href="landing.html" class="back-btn" title="Volver al inicio">
+                <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            </a>
+            <div class="header-titles">
+                <h1>📚 Biblioteca de Proyectos</h1>
+                <p>Seguimiento de proyectos legislativos</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <div class="toolbar-left">
+            <div class="search-box">
+                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" id="search-input" placeholder="Buscar proyectos...">
+            </div>
+            <select class="filter-select" id="filter-estado">
+                <option value="">Todos los estados</option>
+                <option value="Presentado">Presentado</option>
+                <option value="EnRevision">En Revisión</option>
+                <option value="EnComision">En Comisión</option>
+                <option value="Aprobado">Aprobado</option>
+                <option value="Rechazado">Rechazado</option>
+                <option value="Archivado">Archivado</option>
+            </select>
+            <select class="filter-select" id="filter-comision">
+                <option value="">Todas las comisiones</option>
+            </select>
+        </div>
+        <button class="btn-nuevo" id="btn-nuevo-proyecto">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            Nuevo Proyecto
+        </button>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- Stats -->
+        <div class="stats-row" id="stats-row"></div>
+
+        <!-- Lista -->
+        <div class="projects-header">
+            <div class="projects-title">Proyectos</div>
+            <span class="count-badge" id="count-badge">0</span>
+        </div>
+        <div class="projects-list" id="projects-list">
+            <div class="empty-state">
+                <div class="empty-icon">📂</div>
+                <h3>No hay proyectos todavía</h3>
+                <p>Hacé click en "Nuevo Proyecto" para agregar el primero</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- MODAL: NUEVO / EDITAR PROYECTO        -->
+    <!-- ══════════════════════════════════════ -->
+    <div class="modal-overlay form-modal" id="form-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title" id="form-modal-title">Nuevo Proyecto</span>
+                <button class="modal-close" id="form-modal-close">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group full">
+                        <label class="form-label">Título del proyecto *</label>
+                        <input type="text" class="form-input" id="f-titulo" placeholder="Ej: Ordenanza de arbolado urbano...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Estado *</label>
+                        <select class="form-select" id="f-estado">
+                            <option value="Presentado">Presentado</option>
+                            <option value="EnRevision">En Revisión</option>
+                            <option value="EnComision">En Comisión</option>
+                            <option value="Aprobado">Aprobado</option>
+                            <option value="Rechazado">Rechazado</option>
+                            <option value="Archivado">Archivado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Comisión</label>
+                        <select class="form-select" id="f-comision"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fecha de presentación *</label>
+                        <input type="date" class="form-input" id="f-fecha">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Número de expediente</label>
+                        <input type="text" class="form-input" id="f-expediente" placeholder="Ej: EXP-2025-001">
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">Descripción / resumen</label>
+                        <textarea class="form-textarea" id="f-descripcion" placeholder="Breve descripción del proyecto..."></textarea>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">Archivo PDF</label>
+                        <div class="upload-zone" id="upload-zone">
+                            <input type="file" id="f-pdf" accept="application/pdf">
+                            <div class="upload-icon">📄</div>
+                            <div class="upload-text">Arrastrá el PDF acá o hacé click para seleccionarlo</div>
+                            <div class="upload-sub">Solo archivos PDF · Máx. 20 MB</div>
+                            <div class="upload-filename" id="upload-filename"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel" id="form-cancel">Cancelar</button>
+                <button class="btn btn-save" id="form-save">Guardar Proyecto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- MODAL: PREVIEW PDF                    -->
+    <!-- ══════════════════════════════════════ -->
+    <div class="modal-overlay preview-modal" id="preview-modal">
+        <div class="modal" style="max-width: 860px;">
+            <div class="modal-header">
+                <span class="modal-title" id="preview-modal-title">Vista previa</span>
+                <button class="modal-close" id="preview-modal-close">×</button>
+            </div>
+            <div class="modal-body">
+                <iframe class="pdf-frame" id="pdf-frame" src=""></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- MODAL: CONFIRMAR ELIMINACIÓN          -->
+    <!-- ══════════════════════════════════════ -->
+    <div class="modal-overlay" id="confirm-modal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <span class="modal-title">Confirmar eliminación</span>
+                <button class="modal-close" id="confirm-modal-close">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 14px; color: var(--gray-600); line-height: 1.6;">
+                    ¿Estás seguro de que querés eliminar el proyecto <strong id="confirm-nombre"></strong>?<br>Esta acción no se puede deshacer.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel" id="confirm-cancel">Cancelar</button>
+                <button class="btn" style="background: var(--red); color: white;" id="confirm-delete">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+// ════════════════════════════════════════
+// COMISIONES (completar nombres reales)
+// ════════════════════════════════════════
+const COMISIONES = [
+    'Labor Parlamentaria',
+    'Salud',
+    'Educación y Cultura',
+    'Obras Públicas',
+    'Hacienda y Presupuesto',
+    'Seguridad y Justicia',
+    'Medio Ambiente',
+    'Desarrollo Social'
+];
+
+// ════════════════════════════════════════
+// ESTADOS CONFIG
+// ════════════════════════════════════════
+const ESTADOS = {
+    'Presentado':  { label: 'Presentado',  cls: 'estado-Presentado',  border: 'border-Presentado' },
+    'EnRevision':  { label: 'En Revisión', cls: 'estado-EnRevision',  border: 'border-EnRevision' },
+    'EnComision':  { label: 'En Comisión', cls: 'estado-EnComision',  border: 'border-EnComision' },
+    'Aprobado':    { label: 'Aprobado',    cls: 'estado-Aprobado',    border: 'border-Aprobado' },
+    'Rechazado':   { label: 'Rechazado',   cls: 'estado-Rechazado',   border: 'border-Rechazado' },
+    'Archivado':   { label: 'Archivado',   cls: 'estado-Archivado',   border: 'border-Archivado' }
+};
+
+// ════════════════════════════════════════
+// STORAGE (IndexedDB para PDFs)
+// ════════════════════════════════════════
+const DB_NAME = 'lla_biblioteca';
+const DB_VER  = 1;
+let db = null;
+
+function openDB() {
+    return new Promise((res, rej) => {
+        const req = indexedDB.open(DB_NAME, DB_VER);
+        req.onupgradeneeded = e => {
+            const d = e.target.result;
+            if (!d.objectStoreNames.contains('proyectos')) {
+                d.createObjectStore('proyectos', { keyPath: 'id' });
+            }
+        };
+        req.onsuccess = e => { db = e.target.result; res(db); };
+        req.onerror = e => rej(e);
+    });
+}
+
+function dbGetAll() {
+    return new Promise((res, rej) => {
+        const tx = db.transaction('proyectos', 'readonly');
+        const req = tx.objectStore('proyectos').getAll();
+        req.onsuccess = e => res(e.target.result);
+        req.onerror = e => rej(e);
+    });
+}
+
+function dbPut(obj) {
+    return new Promise((res, rej) => {
+        const tx = db.transaction('proyectos', 'readwrite');
+        const req = tx.objectStore('proyectos').put(obj);
+        req.onsuccess = () => res();
+        req.onerror = e => rej(e);
+    });
+}
+
+function dbDelete(id) {
+    return new Promise((res, rej) => {
+        const tx = db.transaction('proyectos', 'readwrite');
+        const req = tx.objectStore('proyectos').delete(id);
+        req.onsuccess = () => res();
+        req.onerror = e => rej(e);
+    });
+}
+
+// ════════════════════════════════════════
+// ESTADO DE LA APP
+// ════════════════════════════════════════
+let proyectos = [];
+let editingId = null;
+let deleteId  = null;
+let pendingPDFBlob = null; // archivo seleccionado en el form
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+async function init() {
+    await openDB();
+    poblarSelectsComisiones();
+    proyectos = await dbGetAll();
+    renderAll();
+    bindEvents();
+}
+
+function poblarSelectsComisiones() {
+    const selects = ['f-comision', 'filter-comision'];
+    selects.forEach(id => {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+        if (id === 'f-comision') {
+            sel.innerHTML = '<option value="">Sin comisión asignada</option>';
+        }
+        COMISIONES.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.textContent = c;
+            sel.appendChild(opt);
+        });
+    });
+}
+
+// ════════════════════════════════════════
+// RENDER
+// ════════════════════════════════════════
+function renderAll() {
+    renderStats();
+    renderList();
+}
+
+function renderStats() {
+    const counts = {};
+    Object.keys(ESTADOS).forEach(k => { counts[k] = 0; });
+    proyectos.forEach(p => { counts[p.estado] = (counts[p.estado] || 0) + 1; });
+
+    const row = document.getElementById('stats-row');
+    row.innerHTML = `
+        <div class="stat-card">
+            <div class="stat-label">Total</div>
+            <div class="stat-value">${proyectos.length}</div>
+            <div class="stat-sub">proyectos</div>
+        </div>
+        ${Object.entries(ESTADOS).map(([k, v]) => `
+            <div class="stat-card">
+                <div class="stat-label">${v.label}</div>
+                <div class="stat-value" style="font-size:22px">${counts[k] || 0}</div>
+            </div>
+        `).join('')}
+    `;
+}
+
+function getFiltered() {
+    const q    = document.getElementById('search-input').value.toLowerCase();
+    const est  = document.getElementById('filter-estado').value;
+    const com  = document.getElementById('filter-comision').value;
+
+    return proyectos.filter(p => {
+        const matchQ   = !q || p.titulo.toLowerCase().includes(q) || (p.descripcion || '').toLowerCase().includes(q);
+        const matchEst = !est || p.estado === est;
+        const matchCom = !com || p.comision === com;
+        return matchQ && matchEst && matchCom;
+    }).sort((a, b) => b.id - a.id);
+}
+
+function renderList() {
+    const filtered = getFiltered();
+    const list = document.getElementById('projects-list');
+    document.getElementById('count-badge').textContent = filtered.length;
+
+    if (filtered.length === 0) {
+        list.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">🔍</div>
+                <h3>${proyectos.length === 0 ? 'No hay proyectos todavía' : 'Sin resultados'}</h3>
+                <p>${proyectos.length === 0 ? 'Hacé click en "Nuevo Proyecto" para agregar el primero' : 'Probá cambiando los filtros'}</p>
+            </div>`;
+        return;
+    }
+
+    list.innerHTML = filtered.map(p => {
+        const est    = ESTADOS[p.estado] || ESTADOS['Presentado'];
+        const fecha  = p.fecha ? formatFecha(p.fecha) : '—';
+        const tienePDF = !!p.pdfBlob;
+
+        const estadoOpts = Object.entries(ESTADOS).map(([k, v]) =>
+            `<option value="${k}" ${p.estado === k ? 'selected' : ''}>${v.label}</option>`
+        ).join('');
+
+        return `
+        <div class="project-card ${est.border}" data-id="${p.id}">
+            <div class="project-card-inner">
+                <div class="project-main">
+                    <div class="project-top">
+                        <div class="project-title">${escHtml(p.titulo)}</div>
+                    </div>
+                    <div class="project-meta">
+                        <span class="meta-item">
+                            <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+                            ${fecha}
+                        </span>
+                        ${p.comision ? `<span class="meta-item">
+                            <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+                            ${escHtml(p.comision)}
+                        </span>` : ''}
+                        ${p.expediente ? `<span class="meta-item">
+                            <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                            ${escHtml(p.expediente)}
+                        </span>` : ''}
+                        ${tienePDF ? `<span class="meta-item" style="color:#22c55e">
+                            <svg viewBox="0 0 24 24" style="fill:#22c55e"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zM14 13h1V8.5h-1V13z"/></svg>
+                            PDF adjunto
+                        </span>` : ''}
+                    </div>
+                    ${p.descripcion ? `<div class="project-desc">${escHtml(p.descripcion)}</div>` : ''}
+                </div>
+                <div class="project-actions">
+                    <select class="estado-badge-select ${est.cls}" onchange="cambiarEstado(${p.id}, this.value)">
+                        ${estadoOpts}
+                    </select>
+                    <div class="action-btns">
+                        ${tienePDF ? `
+                        <button class="icon-btn icon-btn-preview" title="Ver PDF" onclick="previewPDF(${p.id})">
+                            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                        </button>
+                        <button class="icon-btn icon-btn-download" title="Descargar PDF" onclick="downloadPDF(${p.id})">
+                            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                        </button>
+                        ` : ''}
+                        <button class="icon-btn icon-btn-edit" title="Editar" onclick="editProyecto(${p.id})">
+                            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                        </button>
+                        <button class="icon-btn icon-btn-delete" title="Eliminar" onclick="promptDelete(${p.id})">
+                            <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════
+function escHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function formatFecha(iso) {
+    if (!iso) return '—';
+    const [y, m, d] = iso.split('-');
+    const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    return `${+d} ${meses[+m - 1]} ${y}`;
+}
+
+function genId() { return Date.now() + Math.floor(Math.random() * 1000); }
+
+// ════════════════════════════════════════
+// ACCIONES
+// ════════════════════════════════════════
+async function cambiarEstado(id, nuevoEstado) {
+    const p = proyectos.find(x => x.id === id);
+    if (!p) return;
+    p.estado = nuevoEstado;
+    await dbPut(p);
+    renderAll();
+}
+
+function previewPDF(id) {
+    const p = proyectos.find(x => x.id === id);
+    if (!p || !p.pdfBlob) return;
+    const url = URL.createObjectURL(p.pdfBlob);
+    document.getElementById('pdf-frame').src = url;
+    document.getElementById('preview-modal-title').textContent = p.titulo;
+    document.getElementById('preview-modal').classList.add('active');
+}
+
+function downloadPDF(id) {
+    const p = proyectos.find(x => x.id === id);
+    if (!p || !p.pdfBlob) return;
+    const url = URL.createObjectURL(p.pdfBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${p.titulo.replace(/[^a-z0-9áéíóú\s]/gi,'_')}.pdf`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 3000);
+}
+
+function promptDelete(id) {
+    const p = proyectos.find(x => x.id === id);
+    if (!p) return;
+    deleteId = id;
+    document.getElementById('confirm-nombre').textContent = `"${p.titulo}"`;
+    document.getElementById('confirm-modal').classList.add('active');
+}
+
+async function doDelete() {
+    if (!deleteId) return;
+    await dbDelete(deleteId);
+    proyectos = proyectos.filter(x => x.id !== deleteId);
+    deleteId = null;
+    document.getElementById('confirm-modal').classList.remove('active');
+    renderAll();
+}
+
+function editProyecto(id) {
+    const p = proyectos.find(x => x.id === id);
+    if (!p) return;
+    editingId = id;
+    pendingPDFBlob = null;
+
+    document.getElementById('form-modal-title').textContent = 'Editar Proyecto';
+    document.getElementById('f-titulo').value      = p.titulo || '';
+    document.getElementById('f-estado').value      = p.estado || 'Presentado';
+    document.getElementById('f-comision').value    = p.comision || '';
+    document.getElementById('f-fecha').value       = p.fecha || '';
+    document.getElementById('f-expediente').value  = p.expediente || '';
+    document.getElementById('f-descripcion').value = p.descripcion || '';
+
+    const zone = document.getElementById('upload-zone');
+    const fname = document.getElementById('upload-filename');
+    if (p.pdfBlob) {
+        zone.classList.add('has-file');
+        fname.style.display = 'block';
+        fname.textContent = '✅ PDF existente (subí uno nuevo para reemplazarlo)';
+    } else {
+        zone.classList.remove('has-file');
+        fname.style.display = 'none';
+    }
+
+    document.getElementById('form-modal').classList.add('active');
+}
+
+// ════════════════════════════════════════
+// FORM SAVE
+// ════════════════════════════════════════
+async function saveForm() {
+    const titulo = document.getElementById('f-titulo').value.trim();
+    if (!titulo) { alert('El título es obligatorio'); return; }
+
+    const id    = editingId || genId();
+    const exist = editingId ? proyectos.find(x => x.id === editingId) : null;
+
+    const proyecto = {
+        id,
+        titulo,
+        estado:      document.getElementById('f-estado').value,
+        comision:    document.getElementById('f-comision').value,
+        fecha:       document.getElementById('f-fecha').value,
+        expediente:  document.getElementById('f-expediente').value.trim(),
+        descripcion: document.getElementById('f-descripcion').value.trim(),
+        pdfBlob:     pendingPDFBlob || (exist ? exist.pdfBlob : null),
+    };
+
+    await dbPut(proyecto);
+
+    if (editingId) {
+        proyectos = proyectos.map(x => x.id === editingId ? proyecto : x);
+    } else {
+        proyectos.push(proyecto);
+    }
+
+    closeFormModal();
+    renderAll();
+}
+
+function closeFormModal() {
+    document.getElementById('form-modal').classList.remove('active');
+    document.getElementById('f-titulo').value      = '';
+    document.getElementById('f-estado').value      = 'Presentado';
+    document.getElementById('f-comision').value    = '';
+    document.getElementById('f-fecha').value       = '';
+    document.getElementById('f-expediente').value  = '';
+    document.getElementById('f-descripcion').value = '';
+    document.getElementById('f-pdf').value         = '';
+    document.getElementById('upload-zone').classList.remove('has-file');
+    document.getElementById('upload-filename').style.display = 'none';
+    document.getElementById('form-modal-title').textContent  = 'Nuevo Proyecto';
+    editingId = null;
+    pendingPDFBlob = null;
+}
+
+// ════════════════════════════════════════
+// BIND EVENTS
+// ════════════════════════════════════════
+function bindEvents() {
+
+    // Abrir form nuevo
+    document.getElementById('btn-nuevo-proyecto').addEventListener('click', () => {
+        editingId = null;
+        document.getElementById('f-fecha').value = new Date().toISOString().slice(0, 10);
+        document.getElementById('form-modal').classList.add('active');
+    });
+
+    // Cerrar form modal
+    document.getElementById('form-modal-close').addEventListener('click', closeFormModal);
+    document.getElementById('form-cancel').addEventListener('click', closeFormModal);
+    document.getElementById('form-modal').addEventListener('click', e => {
+        if (e.target.id === 'form-modal') closeFormModal();
+    });
+
+    // Guardar
+    document.getElementById('form-save').addEventListener('click', saveForm);
+
+    // Preview modal
+    document.getElementById('preview-modal-close').addEventListener('click', () => {
+        document.getElementById('preview-modal').classList.remove('active');
+        document.getElementById('pdf-frame').src = '';
+    });
+    document.getElementById('preview-modal').addEventListener('click', e => {
+        if (e.target.id === 'preview-modal') {
+            document.getElementById('preview-modal').classList.remove('active');
+            document.getElementById('pdf-frame').src = '';
+        }
+    });
+
+    // Confirm delete
+    document.getElementById('confirm-modal-close').addEventListener('click', () => {
+        document.getElementById('confirm-modal').classList.remove('active');
+        deleteId = null;
+    });
+    document.getElementById('confirm-cancel').addEventListener('click', () => {
+        document.getElementById('confirm-modal').classList.remove('active');
+        deleteId = null;
+    });
+    document.getElementById('confirm-delete').addEventListener('click', doDelete);
+    document.getElementById('confirm-modal').addEventListener('click', e => {
+        if (e.target.id === 'confirm-modal') {
+            document.getElementById('confirm-modal').classList.remove('active');
+            deleteId = null;
+        }
+    });
+
+    // Filtros
+    document.getElementById('search-input').addEventListener('input', renderList);
+    document.getElementById('filter-estado').addEventListener('change', renderList);
+    document.getElementById('filter-comision').addEventListener('change', renderList);
+
+    // Upload PDF
+    const fileInput = document.getElementById('f-pdf');
+    const zone      = document.getElementById('upload-zone');
+    const fname     = document.getElementById('upload-filename');
+
+    fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        if (!file) return;
+        if (file.type !== 'application/pdf') { alert('Solo se aceptan archivos PDF'); return; }
+        if (file.size > 20 * 1024 * 1024) { alert('El archivo no puede superar los 20 MB'); return; }
+        pendingPDFBlob = file;
+        zone.classList.add('has-file');
+        fname.style.display = 'block';
+        fname.textContent = `✅ ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+    });
+
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const file = e.dataTransfer.files[0];
+        if (!file) return;
+        if (file.type !== 'application/pdf') { alert('Solo se aceptan archivos PDF'); return; }
+        if (file.size > 20 * 1024 * 1024) { alert('El archivo no puede superar los 20 MB'); return; }
+        pendingPDFBlob = file;
+        zone.classList.add('has-file');
+        fname.style.display = 'block';
+        fname.textContent = `✅ ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+    });
+}
+
+// ════════════════════════════════════════
+// START
+// ════════════════════════════════════════
+init();
+</script>
+</body>
+</html>
