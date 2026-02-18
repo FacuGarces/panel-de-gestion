@@ -453,7 +453,7 @@
 // ════════════════════════════════════════
 // CONFIG
 // ════════════════════════════════════════
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbx-_LWMHLPYPvl1A-ilyOPmzh1jIMOKOKhPT0YQXlfHGIn-4Lc0bRuRHXv5zA5jiPd6/exec';
+const SHEET_URL = 'TU_URL_DE_APPS_SCRIPT_ACA'; // <- reemplazar después del deploy
 
 const COMISIONES = [
     'Labor Parlamentaria',
@@ -527,7 +527,7 @@ async function apiPost(body) {
     await fetch(SHEET_URL, {
         method: 'POST',
         mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify(body)
     });
     return true;
