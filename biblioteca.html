@@ -376,6 +376,7 @@
                     <div class="form-group">
                         <label class="form-label">Estado *</label>
                         <select class="form-select" id="f-estado" onchange="toggleFecha(this.value)">
+                            <option value="" disabled selected>Seleccionar estado...</option>
                             <option value="Presentado">Presentado</option>
                             <option value="EnRevision">En Revisión</option>
                             <option value="EnComision">En Comisión</option>
@@ -396,7 +397,7 @@
                         <label class="form-label">Fecha de creación</label>
                         <input type="date" class="form-input" id="f-fecha-creacion" readonly style="background:#f3f4f6;cursor:not-allowed;color:#9ca3af;">
                     </div>
-                    <div class="form-group full">
+                    <div class="form-group full" id="expediente-group">
                         <label class="form-label">Número de expediente</label>
                         <input type="text" class="form-input" id="f-expediente" placeholder="Ej: EXP-2025-001">
                     </div>
@@ -767,8 +768,10 @@ function editProyecto(id) {
 
 async function saveForm() {
     const titulo   = document.getElementById('f-titulo').value.trim();
+    const estado   = document.getElementById('f-estado').value;
     const comision = document.getElementById('f-comision').value;
     if (!titulo)   { showToast('El título es obligatorio', 'error'); return; }
+    if (!estado)   { showToast('El estado es obligatorio', 'error'); return; }
     if (!comision) { showToast('La comisión es obligatoria', 'error'); return; }
     if (!editingId && !pendingFile) { showToast('El PDF es obligatorio', 'error'); return; }
 
@@ -935,12 +938,17 @@ function bindEvents() {
 // ════════════════════════════════════════
 function toggleFecha(estado) {
     const noPresenta = ['EnRevision', 'Archivado'];
-    const group = document.getElementById('fecha-group');
+    const fechaGroup = document.getElementById('fecha-group');
+    const expGroup   = document.getElementById('expediente-group');
     if (noPresenta.includes(estado)) {
-        group.style.display = 'none';
+        fechaGroup.style.display = 'none';
         document.getElementById('f-fecha').value = '';
+        // Expediente va al lado de fecha-creacion
+        expGroup.classList.remove('full');
     } else {
-        group.style.display = '';
+        fechaGroup.style.display = '';
+        // Expediente vuelve a full width
+        expGroup.classList.add('full');
     }
 }
 
