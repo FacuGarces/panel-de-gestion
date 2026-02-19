@@ -730,7 +730,16 @@ function mostrarFormCrearDoc() {
 }
 
 async function crearGoogleDoc() {
-    const titulo = document.getElementById('f-titulo').value.trim() || 'Nuevo Proyecto';
+    // Validar campos obligatorios antes de crear el doc
+    const tituloVal   = document.getElementById('f-titulo').value.trim();
+    const estadoVal   = document.getElementById('f-estado').value;
+    const comisionVal = document.getElementById('f-comision').value;
+
+    if (!tituloVal)   { showToast('El título es obligatorio', 'error'); return; }
+    if (!estadoVal)   { showToast('El estado es obligatorio', 'error'); return; }
+    if (!comisionVal) { showToast('La comisión es obligatoria', 'error'); return; }
+
+    const titulo = tituloVal;
     const fecha  = document.getElementById('f-fecha').value || new Date().toISOString().slice(0, 10);
 
     const btn = document.getElementById('btn-create-doc');
@@ -756,7 +765,10 @@ async function crearGoogleDoc() {
         // Abrir en nueva pestaña
         window.open(pendingDocUrl, '_blank');
 
-        showToast('Documento creado ✓', 'success');
+        // Campos ya validados arriba — guardar automáticamente
+        showToast('Documento creado, guardando proyecto...', 'success');
+        await new Promise(r => setTimeout(r, 800));
+        await saveForm();
     } catch (err) {
         console.error(err);
         showToast('Error al crear el documento. Verificá el Apps Script.', 'error');
