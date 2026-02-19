@@ -944,10 +944,12 @@ function toggleFecha(estado) {
     const expGroup   = document.getElementById('expediente-group');
     if (noPresenta.includes(estado)) {
         fechaGroup.style.display = 'none';
+        expGroup.style.display = 'none';
         document.getElementById('f-fecha').value = '';
-        expGroup.classList.remove('full');
+        document.getElementById('f-expediente').value = '';
     } else {
         fechaGroup.style.display = '';
+        expGroup.style.display = '';
         expGroup.classList.add('full');
     }
 }
