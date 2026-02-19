@@ -130,6 +130,8 @@
             overflow: hidden; border-left: 4px solid var(--gray-200); transition: all 0.2s;
         }
         .project-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); transform: translateY(-1px); }
+        .project-card.has-pdf { cursor: pointer; }
+        .project-card.has-pdf:hover { box-shadow: 0 6px 24px rgba(48,17,94,0.2); transform: translateY(-2px); }
 
         .project-card-inner { padding: 16px 18px; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: start; }
 
@@ -383,12 +385,16 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Comisión</label>
+                        <label class="form-label">Comisión *</label>
                         <select class="form-select" id="f-comision"></select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Fecha de presentación</label>
+                        <label class="form-label">Fecha de presentación *</label>
                         <input type="date" class="form-input" id="f-fecha">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fecha de creación</label>
+                        <input type="date" class="form-input" id="f-fecha-creacion" readonly style="background:#f3f4f6;cursor:not-allowed;color:#9ca3af;">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Número de expediente</label>
@@ -399,7 +405,7 @@
                         <textarea class="form-textarea" id="f-descripcion" placeholder="Breve descripción del proyecto..."></textarea>
                     </div>
                     <div class="form-group full">
-                        <label class="form-label">Archivo PDF</label>
+                        <label class="form-label">Archivo PDF *</label>
                         <div class="upload-zone" id="upload-zone">
                             <input type="file" id="f-pdf" accept="application/pdf">
                             <div class="upload-icon">📄</div>
@@ -622,17 +628,21 @@ function renderList() {
         ).join('');
 
         return `
-        <div class="project-card ${est.border}">
+        <div class="project-card ${est.border}${tienePDF ? ' has-pdf' : ''}" ${tienePDF ? `onclick="previewPDF('${p.id}')"` : ''}>
             <div class="project-card-inner">
                 <div class="project-main">
                     <div class="project-top">
                         <div class="project-title">${escHtml(p.titulo)}</div>
                     </div>
                     <div class="project-meta">
-                        <span class="meta-item">
+                        <span class="meta-item" title="Fecha de presentación">
                             <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
-                            ${fecha}
+                            Presentado: ${fecha}
                         </span>
+                        ${p.fechaCreacion ? `<span class="meta-item" title="Fecha de creación">
+                            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+                            Creado: ${formatFecha(p.fechaCreacion)}
+                        </span>` : ''}
                         ${p.comision ? `<span class="meta-item">
                             <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
                             ${escHtml(p.comision)}
@@ -649,10 +659,10 @@ function renderList() {
                     ${p.descripcion ? `<div class="project-desc">${escHtml(p.descripcion)}</div>` : ''}
                 </div>
                 <div class="project-actions">
-                    <select class="estado-badge-select ${est.cls}" onchange="cambiarEstado('${p.id}', this.value)">
+                    <select class="estado-badge-select ${est.cls}" onchange="cambiarEstado('${p.id}', this.value)" onclick="event.stopPropagation()">
                         ${estadoOpts}
                     </select>
-                    <div class="action-btns">
+                    <div class="action-btns" onclick="event.stopPropagation()">
                         ${tienePDF ? `
                         <button class="icon-btn icon-btn-preview" title="Ver PDF" onclick="previewPDF('${p.id}')">
                             <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
@@ -733,12 +743,13 @@ function editProyecto(id) {
     editingId = id; pendingFile = null;
 
     document.getElementById('form-modal-title').textContent  = 'Editar Proyecto';
-    document.getElementById('f-titulo').value      = p.titulo      || '';
-    document.getElementById('f-estado').value      = p.estado      || 'Presentado';
-    document.getElementById('f-comision').value    = p.comision    || '';
-    document.getElementById('f-fecha').value       = p.fecha       || '';
-    document.getElementById('f-expediente').value  = p.expediente  || '';
-    document.getElementById('f-descripcion').value = p.descripcion || '';
+    document.getElementById('f-titulo').value          = p.titulo        || '';
+    document.getElementById('f-estado').value          = p.estado        || 'Presentado';
+    document.getElementById('f-comision').value        = p.comision      || '';
+    document.getElementById('f-fecha').value           = p.fecha         || '';
+    document.getElementById('f-fecha-creacion').value  = p.fechaCreacion || '';
+    document.getElementById('f-expediente').value      = p.expediente    || '';
+    document.getElementById('f-descripcion').value     = p.descripcion   || '';
 
     const zone  = document.getElementById('upload-zone');
     const fname = document.getElementById('upload-filename');
@@ -754,8 +765,11 @@ function editProyecto(id) {
 }
 
 async function saveForm() {
-    const titulo = document.getElementById('f-titulo').value.trim();
-    if (!titulo) { showToast('El título es obligatorio', 'error'); return; }
+    const titulo   = document.getElementById('f-titulo').value.trim();
+    const comision = document.getElementById('f-comision').value;
+    if (!titulo)   { showToast('El título es obligatorio', 'error'); return; }
+    if (!comision) { showToast('La comisión es obligatoria', 'error'); return; }
+    if (!editingId && !pendingFile) { showToast('El PDF es obligatorio', 'error'); return; }
 
     const saveBtn = document.getElementById('form-save');
     saveBtn.disabled = true;
@@ -773,18 +787,19 @@ async function saveForm() {
         }
 
         const body = {
-            action:      editingId ? 'update' : 'add',
-            id:          editingId,
+            action:         editingId ? 'update' : 'add',
+            id:             editingId,
             titulo,
-            estado:      document.getElementById('f-estado').value,
-            comision:    document.getElementById('f-comision').value,
-            fecha:       document.getElementById('f-fecha').value,
-            expediente:  document.getElementById('f-expediente').value.trim(),
-            descripcion: document.getElementById('f-descripcion').value.trim(),
+            estado:         document.getElementById('f-estado').value,
+            comision:       document.getElementById('f-comision').value,
+            fecha:          document.getElementById('f-fecha').value,
+            fechaCreacion:  editingId ? (existing?.fechaCreacion || '') : new Date().toISOString().slice(0,10),
+            expediente:     document.getElementById('f-expediente').value.trim(),
+            descripcion:    document.getElementById('f-descripcion').value.trim(),
             pdfBase64,
             pdfNewName,
-            pdfUrl:      existing?.pdfUrl  || '',
-            pdfName:     existing?.pdfName || ''
+            pdfUrl:         existing?.pdfUrl  || '',
+            pdfName:        existing?.pdfName || ''
         };
 
         showLoading('Guardando...');
@@ -806,7 +821,7 @@ async function saveForm() {
 
 function closeFormModal() {
     document.getElementById('form-modal').classList.remove('active');
-    ['f-titulo','f-expediente','f-descripcion'].forEach(id => document.getElementById(id).value = '');
+    ['f-titulo','f-expediente','f-descripcion','f-fecha-creacion'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('f-estado').value   = 'Presentado';
     document.getElementById('f-comision').value = '';
     document.getElementById('f-fecha').value    = '';
@@ -842,11 +857,19 @@ function escHtml(str) {
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-function formatFecha(iso) {
-    if (!iso) return '—';
-    const [y, m, d] = iso.split('-');
-    const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-    return `${+d} ${meses[+m-1]} ${y}`;
+function formatFecha(val) {
+    if (!val || val === '—') return '—';
+    const s = String(val).trim();
+    if (!s) return '—';
+    // ISO: 2026-02-18
+    const iso = s.substring(0, 10);
+    const parts = iso.split('-');
+    if (parts.length === 3 && parts[0].length === 4) {
+        const [y, m, d] = parts;
+        const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+        return `${+d} ${meses[+m-1]} ${y}`;
+    }
+    return s;
 }
 
 // ════════════════════════════════════════
@@ -856,6 +879,7 @@ function bindEvents() {
     document.getElementById('btn-nuevo-proyecto').addEventListener('click', () => {
         editingId = null;
         document.getElementById('f-fecha').value = new Date().toISOString().slice(0,10);
+        document.getElementById('f-fecha-creacion').value = new Date().toISOString().slice(0,10);
         document.getElementById('form-modal').classList.add('active');
     });
 
