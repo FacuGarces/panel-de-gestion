@@ -882,8 +882,10 @@ function formatFecha(val) {
 function bindEvents() {
     document.getElementById('btn-nuevo-proyecto').addEventListener('click', () => {
         editingId = null;
-        document.getElementById('f-fecha').value = new Date().toISOString().slice(0,10);
+        document.getElementById('f-estado').value = '';
+        document.getElementById('f-fecha').value = '';
         document.getElementById('f-fecha-creacion').value = new Date().toISOString().slice(0,10);
+        toggleFecha('');
         document.getElementById('form-modal').classList.add('active');
     });
 
