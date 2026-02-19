@@ -375,7 +375,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Estado *</label>
-                        <select class="form-select" id="f-estado">
+                        <select class="form-select" id="f-estado" onchange="toggleFecha(this.value)">
                             <option value="Presentado">Presentado</option>
                             <option value="EnRevision">En Revisión</option>
                             <option value="EnComision">En Comisión</option>
@@ -388,15 +388,15 @@
                         <label class="form-label">Comisión *</label>
                         <select class="form-select" id="f-comision"></select>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Fecha de presentación *</label>
+                    <div class="form-group" id="fecha-group">
+                        <label class="form-label">Fecha de presentación</label>
                         <input type="date" class="form-input" id="f-fecha">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Fecha de creación</label>
                         <input type="date" class="form-input" id="f-fecha-creacion" readonly style="background:#f3f4f6;cursor:not-allowed;color:#9ca3af;">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group full">
                         <label class="form-label">Número de expediente</label>
                         <input type="text" class="form-input" id="f-expediente" placeholder="Ej: EXP-2025-001">
                     </div>
@@ -761,6 +761,7 @@ function editProyecto(id) {
         zone.classList.remove('has-file');
         fname.style.display = 'none';
     }
+    toggleFecha(document.getElementById('f-estado').value);
     document.getElementById('form-modal').classList.add('active');
 }
 
@@ -926,6 +927,21 @@ function bindEvents() {
     zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('drag-over'); });
     zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
     zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag-over'); handleFile(e.dataTransfer.files[0]); });
+}
+
+
+// ════════════════════════════════════════
+// TOGGLE FECHA PRESENTACIÓN
+// ════════════════════════════════════════
+function toggleFecha(estado) {
+    const noPresenta = ['EnRevision', 'Archivado'];
+    const group = document.getElementById('fecha-group');
+    if (noPresenta.includes(estado)) {
+        group.style.display = 'none';
+        document.getElementById('f-fecha').value = '';
+    } else {
+        group.style.display = '';
+    }
 }
 
 init();
