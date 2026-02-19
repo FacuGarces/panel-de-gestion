@@ -351,6 +351,7 @@
         .pdf-frame { width: 100%; height: 75vh; border: none; display: block; }
 
         .form-modal .modal { max-width: 580px; }
+        .form-modal .modal-body { max-height: calc(90vh - 130px); overflow-y: auto; }
 
         /* ─── LOADING OVERLAY ─── */
         .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(48,17,94,0.5); z-index: 500; align-items: center; justify-content: center; }
@@ -962,10 +963,17 @@ function editProyecto(id) {
     document.getElementById('f-expediente').value      = p.expediente    || '';
     document.getElementById('f-descripcion').value     = p.descripcion   || '';
 
-    // Resetear tabs y zonas
-    switchUploadTab('pdf');
+    // Si tiene docUrl guardado, pre-cargar para que no se pierda al guardar
+    if (p.docUrl) pendingDocUrl = p.docUrl;
 
-    // Mostrar info de archivos existentes
+    // Elegir qué tab mostrar según qué archivo tiene el proyecto
+    if (p.docUrl && !p.pdfUrl) {
+        switchUploadTab('doc');
+    } else {
+        switchUploadTab('pdf');
+    }
+
+    // Mostrar info del PDF existente
     const zone  = document.getElementById('upload-zone');
     const fname = document.getElementById('upload-filename');
     if (p.pdfUrl) {
@@ -977,13 +985,21 @@ function editProyecto(id) {
         fname.style.display = 'none';
     }
 
-    // Si tiene Google Doc vinculado, mostrar info en la sección doc
+    // Mostrar info del Google Doc existente
     const existingInfo = document.getElementById('doc-existing-info');
+    const docUrlPreview = document.getElementById('doc-url-preview');
     if (p.docUrl) {
         document.getElementById('doc-existing-link').href = p.docUrl;
         existingInfo.style.display = 'block';
+        // Mostrar también el link "volver a abrir" con la url existente
+        document.getElementById('doc-url-link').href = p.docUrl;
+        docUrlPreview.style.display = 'block';
+        document.getElementById('doc-create-zone').classList.add('has-doc');
+        // Cambiar texto del botón crear
+        document.getElementById('btn-create-doc').innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg> Reemplazar documento`;
     } else {
         existingInfo.style.display = 'none';
+        docUrlPreview.style.display = 'none';
     }
 
     toggleFecha(document.getElementById('f-estado').value);
@@ -1068,6 +1084,7 @@ function closeFormModal() {
     document.getElementById('doc-existing-info').style.display = 'none';
     document.getElementById('doc-create-zone').classList.remove('has-doc');
     document.getElementById('doc-url-link').href = '';
+    document.getElementById('btn-create-doc').innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg> Crear documento`;
     switchUploadTab('pdf');
     editingId    = null;
     pendingFile  = null;
