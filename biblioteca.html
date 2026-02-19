@@ -535,7 +535,7 @@
                                     <svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
                                     Crear documento
                                 </button>
-                                <!-- Preview link después de crear -->
+                                <!-- Preview link después de crear (modo nuevo) -->
                                 <div class="doc-url-preview" id="doc-url-preview">
                                     ✅ Documento creado y abierto en una nueva pestaña.
                                     <br>
@@ -544,11 +544,18 @@
                                         Volver a abrir →
                                     </a>
                                 </div>
-                                <!-- Info cuando ya existe doc (modo edición) -->
-                                <div class="doc-existing-info" id="doc-existing-info">
-                                    📄 Ya tiene un Google Doc vinculado.
-                                    <a id="doc-existing-link" href="" target="_blank">Abrir →</a>
-                                    <br><small style="opacity:0.8">Si creás uno nuevo, reemplazará al anterior.</small>
+                                <!-- Modo edición: ya tiene doc guardado → mostrar "Seguir editando" -->
+                                <div id="doc-existing-section" style="display:none; margin-top:10px; text-align:center;">
+                                    <a id="btn-seguir-editando" href="" target="_blank" class="btn-create-doc" style="display:inline-flex;">
+                                        <svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+                                        Seguir editando →
+                                    </a>
+                                    <div style="margin-top:8px; font-size:11px; color:var(--gray-400);">
+                                        ¿Querés reemplazarlo?
+                                        <button type="button" onclick="mostrarFormCrearDoc()" style="background:none;border:none;color:var(--gdoc-blue);font-size:11px;font-weight:600;cursor:pointer;font-family:'Montserrat',sans-serif;padding:0;">
+                                            Crear uno nuevo
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -708,24 +715,20 @@ function switchUploadTab(tab) {
     document.getElementById('tab-doc').classList.toggle('active', tab === 'doc');
     document.getElementById('upload-pdf-section').style.display = tab === 'pdf' ? '' : 'none';
     document.getElementById('upload-doc-section').style.display = tab === 'doc' ? '' : 'none';
-
-    // Si cambia a PDF, limpiar docUrl pendiente (y viceversa)
-    if (tab === 'pdf') {
-        pendingDocUrl = null;
-        document.getElementById('doc-url-preview').style.display = 'none';
-        document.getElementById('doc-create-zone').classList.remove('has-doc');
-    } else {
-        // Si cambia a Docs, limpiar PDF pendiente
-        pendingFile = null;
-        document.getElementById('upload-zone').classList.remove('has-file');
-        document.getElementById('upload-filename').style.display = 'none';
-        document.getElementById('f-pdf').value = '';
-    }
+    // Solo cambia la vista, no limpia datos cargados
 }
 
 // ════════════════════════════════════════
 // CREAR GOOGLE DOC
 // ════════════════════════════════════════
+function mostrarFormCrearDoc() {
+    // Ocultar "seguir editando", mostrar botón de crear
+    document.getElementById('doc-existing-section').style.display = 'none';
+    document.getElementById('btn-create-doc').style.display = '';
+    document.getElementById('doc-create-zone').classList.remove('has-doc');
+    // Al crear uno nuevo, el docUrl pendiente se actualizará con el nuevo
+}
+
 async function crearGoogleDoc() {
     const titulo = document.getElementById('f-titulo').value.trim() || 'Nuevo Proyecto';
     const fecha  = document.getElementById('f-fecha').value || new Date().toISOString().slice(0, 10);
@@ -986,19 +989,19 @@ function editProyecto(id) {
     }
 
     // Mostrar info del Google Doc existente
-    const existingInfo = document.getElementById('doc-existing-info');
+    const docExistingSection = document.getElementById('doc-existing-section');
     const docUrlPreview = document.getElementById('doc-url-preview');
     if (p.docUrl) {
-        document.getElementById('doc-existing-link').href = p.docUrl;
-        existingInfo.style.display = 'block';
-        // Mostrar también el link "volver a abrir" con la url existente
-        document.getElementById('doc-url-link').href = p.docUrl;
-        docUrlPreview.style.display = 'block';
+        // Mostrar botón "Seguir editando" con la URL guardada
+        document.getElementById('btn-seguir-editando').href = p.docUrl;
+        docExistingSection.style.display = 'block';
+        // Ocultar el botón "Crear documento" y el preview de "recién creado"
+        document.getElementById('btn-create-doc').style.display = 'none';
+        docUrlPreview.style.display = 'none';
         document.getElementById('doc-create-zone').classList.add('has-doc');
-        // Cambiar texto del botón crear
-        document.getElementById('btn-create-doc').innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg> Reemplazar documento`;
     } else {
-        existingInfo.style.display = 'none';
+        docExistingSection.style.display = 'none';
+        document.getElementById('btn-create-doc').style.display = '';
         docUrlPreview.style.display = 'none';
     }
 
@@ -1081,10 +1084,10 @@ function closeFormModal() {
     document.getElementById('form-modal-title').textContent  = 'Nuevo Proyecto';
     // Reset Google Docs
     document.getElementById('doc-url-preview').style.display = 'none';
-    document.getElementById('doc-existing-info').style.display = 'none';
+    document.getElementById('doc-existing-section').style.display = 'none';
     document.getElementById('doc-create-zone').classList.remove('has-doc');
     document.getElementById('doc-url-link').href = '';
-    document.getElementById('btn-create-doc').innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg> Crear documento`;
+    document.getElementById('btn-create-doc').style.display = '';
     switchUploadTab('pdf');
     editingId    = null;
     pendingFile  = null;
