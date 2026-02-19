@@ -26,7 +26,6 @@
             position: relative;
         }
 
-        /* Fondo con patrón geométrico sutil */
         body::before {
             content: '';
             position: fixed;
@@ -44,7 +43,6 @@
             pointer-events: none;
         }
 
-        /* Orbes decorativos */
         .orb {
             position: fixed;
             border-radius: 50%;
@@ -87,7 +85,6 @@
             max-width: 900px;
         }
 
-        /* Logo / Header */
         .logo-area {
             margin-bottom: 50px;
             animation: fadeInDown 0.6s ease both;
@@ -143,20 +140,12 @@
             line-height: 1.6;
         }
 
-        /* Cards de selección */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 20px;
             margin-top: 50px;
             animation: fadeInUp 0.7s ease 0.2s both;
-        }
-
-        @media (max-width: 600px) {
-            .cards-grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
         }
 
         .card {
@@ -261,7 +250,6 @@
             fill: white;
         }
 
-        /* Footer */
         .footer {
             margin-top: 50px;
             font-size: 12px;
@@ -271,7 +259,6 @@
             animation: fadeInUp 0.7s ease 0.4s both;
         }
 
-        /* Animaciones */
         @keyframes fadeInDown {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -285,6 +272,23 @@
         @keyframes pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        /* ─── MOBILE ─── */
+        @media (max-width: 600px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            body {
+                overflow: auto;
+                justify-content: flex-start;
+            }
+
+            .container {
+                padding: 40px 20px 60px;
+            }
         }
     </style>
 </head>
