@@ -8,17 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Montserrat', sans-serif;
-            height: 100vh;
-            overflow: hidden;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; height: 100vh; overflow: hidden; }
         
         #header {
             background: #30115e;
@@ -34,996 +25,238 @@
         }
 
         .header-back-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.15);
-            border: none;
-            cursor: pointer;
-            transition: background 0.2s;
-            text-decoration: none;
-            flex-shrink: 0;
-            position: absolute;
-            left: 20px;
+            display: flex; align-items: center; justify-content: center;
+            width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(255,255,255,0.15); border: none; cursor: pointer;
+            transition: background 0.2s; text-decoration: none; flex-shrink: 0;
+            position: absolute; left: 20px;
         }
-
         .header-back-btn:hover { background: rgba(255,255,255,0.25); }
         .header-back-btn svg { width: 20px; height: 20px; fill: white; }
-        
-        #header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 5px;
+
+        /* Avatar de usuario en el header */
+        #header-user {
+            position: absolute;
+            right: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #header-user-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.65);
         }
         
-        #header p {
-            font-size: 14px;
-            font-weight: 400;
-            opacity: 0.9;
-        }
+        #header h1 { font-size: 28px; font-weight: 700; margin-bottom: 5px; }
+        #header p { font-size: 14px; font-weight: 400; opacity: 0.9; }
         
         #total-counter {
-            background: white;
-            padding: 10px 14px;
-            border-radius: 2px;
-            box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
-            margin: 10px;
-            max-width: 250px;
-            min-height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: white; padding: 10px 14px; border-radius: 2px;
+            box-shadow: rgba(0,0,0,0.3) 0px 1px 4px -1px; font-size: 14px;
+            font-weight: 600; color: #333; margin: 10px; max-width: 250px;
+            min-height: 40px; display: flex; align-items: center; justify-content: center;
         }
-
-        #total-counter span {
-            color: #30115e;
-            font-weight: 700;
-        }
+        #total-counter span { color: #30115e; font-weight: 700; }
         
-        #map {
-            height: calc(100vh - 120px);
-            width: 100%;
-        }
+        #map { height: calc(100vh - 120px); width: 100%; }
         
         #loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            text-align: center;
-            z-index: 1000;
-            min-width: 300px;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; padding: 30px; border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2); text-align: center; z-index: 1000; min-width: 300px;
         }
+        #loading p { margin-bottom: 15px; font-weight: 600; color: #333; font-size: 15px; }
+        .progress-container { width: 100%; height: 10px; background: white; border: 2px solid #30115e; border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
+        .progress-bar { height: 100%; background: #30115e; border-radius: 8px; width: 0%; transition: width 0.5s ease-out; }
+        .progress-text { font-size: 13px; color: #30115e; font-weight: 700; }
         
-        #loading p {
-            margin-bottom: 15px;
-            font-weight: 600;
-            color: #333;
-            font-size: 15px;
-        }
-        
-        .progress-container {
-            width: 100%;
-            height: 10px;
-            background: white;
-            border: 2px solid #30115e;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background: #30115e;
-            border-radius: 8px;
-            width: 0%;
-            transition: width 0.5s ease-out;
-        }
-        
-        .progress-text {
-            font-size: 13px;
-            color: #30115e;
-            font-weight: 700;
-        }
-        
-        /* Filtros */
         .filters {
-            background: white;
-            padding: 15px;
-            margin: 10px;
-            border-radius: 2px;
-            box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
-            max-width: 250px;
-            transition: all 0.3s ease;
+            background: white; padding: 15px; margin: 10px; border-radius: 2px;
+            box-shadow: rgba(0,0,0,0.3) 0px 1px 4px -1px; max-width: 250px; transition: all 0.3s ease;
         }
-        
-        .filters h3 {
-            margin-bottom: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            cursor: pointer;
-            user-select: none;
-        }
-        
-        .filters.collapsed {
-            padding: 10px 14px;
-            max-width: fit-content;
-            min-height: 40px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .filters.collapsed h3 {
-            margin: 0;
-            font-size: 14px;
-        }
-        
-        .filters.collapsed .filter-buttons {
-            display: none;
-        }
+        .filters h3 { margin-bottom: 12px; font-size: 16px; font-weight: 600; color: #333; cursor: pointer; user-select: none; }
+        .filters.collapsed { padding: 10px 14px; max-width: fit-content; min-height: 40px; display: flex; align-items: center; }
+        .filters.collapsed h3 { margin: 0; font-size: 14px; }
+        .filters.collapsed .filter-buttons { display: none; }
         
         .filter-button {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            padding: 10px 12px;
-            margin: 6px 0;
-            border: 2px solid #e5e7eb;
-            border-radius: 6px;
-            background: white;
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.2s ease;
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%; padding: 10px 12px; margin: 6px 0; border: 2px solid #e5e7eb;
+            border-radius: 6px; background: white; cursor: pointer;
+            font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 500; transition: all 0.2s ease;
         }
-        
-        .filter-button:hover {
-            border-color: #9ca3af;
-        }
-        
-        .filter-button.active {
-            border-color: #30115e;
-            background: #f9fafb;
-        }
-        
-        .filter-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            min-width: 0;
-        }
-        
-        .filter-dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            flex-shrink: 0;
-        }
-        
-        .filter-text {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
+        .filter-button:hover { border-color: #9ca3af; }
+        .filter-button.active { border-color: #30115e; background: #f9fafb; }
+        .filter-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+        .filter-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.3); flex-shrink: 0; }
+        .filter-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .dot-red { background-color: #ef4444; }
         .dot-orange { background-color: #f97316; }
         .dot-green { background-color: #22c55e; }
+        .filter-count { font-weight: 600; color: #6b7280; font-size: 13px; flex-shrink: 0; margin-left: 8px; }
+        .filter-button.active .filter-count { color: #30115e; }
         
-        .filter-count {
-            font-weight: 600;
-            color: #6b7280;
-            font-size: 13px;
-            flex-shrink: 0;
-            margin-left: 8px;
-        }
-        
-        .filter-button.active .filter-count {
-            color: #30115e;
-        }
-        
-        /* Botón de centrar mapa */
         .center-map-btn {
-            background: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 2px;
-            box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 10px;
-            user-select: none;
-            border: none;
+            background: white; width: 40px; height: 40px; border-radius: 2px;
+            box-shadow: rgba(0,0,0,0.3) 0px 1px 4px -1px; cursor: pointer; transition: all 0.2s ease;
+            display: flex; align-items: center; justify-content: center; margin: 10px; user-select: none; border: none;
         }
+        .center-map-btn:hover { background: #30115e; }
+        .center-map-btn svg { width: 20px; height: 20px; fill: #30115e; transition: fill 0.2s ease; }
+        .center-map-btn:hover svg { fill: white; }
         
-        .center-map-btn:hover {
-            background: #30115e;
-        }
-        
-        .center-map-btn svg {
-            width: 20px;
-            height: 20px;
-            fill: #30115e;
-            transition: fill 0.2s ease;
-        }
-        
-        .center-map-btn:hover svg {
-            fill: white;
-        }
-        
-        /* Barra de búsqueda */
         .search-container {
-            background: white;
-            padding: 10px 14px;
-            margin: 10px;
-            border-radius: 2px;
-            box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            max-width: 300px;
-            min-height: 40px;
+            background: white; padding: 10px 14px; margin: 10px; border-radius: 2px;
+            box-shadow: rgba(0,0,0,0.3) 0px 1px 4px -1px; display: flex; align-items: center;
+            gap: 8px; max-width: 300px; min-height: 40px;
         }
+        .search-icon { width: 20px; height: 20px; fill: #30115e; flex-shrink: 0; }
+        .search-input { border: none; outline: none; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 500; width: 100%; color: #333; }
+        .search-input::placeholder { color: #9ca3af; }
         
-        .search-icon {
-            width: 20px;
-            height: 20px;
-            fill: #30115e;
-            flex-shrink: 0;
-        }
-        
-        .search-input {
-            border: none;
-            outline: none;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            width: 100%;
-            color: #333;
-        }
-        
-        .search-input::placeholder {
-            color: #9ca3af;
-        }
-        
-        /* Botón de lupa en mobile */
         .search-button-mobile {
-            background: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 2px;
-            box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            margin: 10px;
-            border: none;
+            background: white; width: 40px; height: 40px; border-radius: 2px;
+            box-shadow: rgba(0,0,0,0.3) 0px 1px 4px -1px; cursor: pointer;
+            display: none; align-items: center; justify-content: center; margin: 10px; border: none;
         }
+        .search-button-mobile svg { width: 20px; height: 20px; fill: #30115e; }
         
-        .search-button-mobile svg {
-            width: 20px;
-            height: 20px;
-            fill: #30115e;
-        }
-        
-        /* Modal de búsqueda mobile */
         .search-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
-            align-items: flex-start;
-            justify-content: center;
-            padding-top: 100px;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 2000; align-items: flex-start;
+            justify-content: center; padding-top: 100px;
         }
+        .search-modal.active { display: flex; }
+        .search-modal-content { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); width: 90%; max-width: 400px; }
+        .search-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .search-modal-title { font-size: 16px; font-weight: 600; color: #333; }
+        .search-modal-close { background: none; border: none; font-size: 24px; color: #666; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; }
+        .search-modal-input-container { display: flex; align-items: center; gap: 10px; border: 2px solid #30115e; padding: 10px; border-radius: 8px; }
+        .search-modal-input { border: none; outline: none; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 500; width: 100%; color: #333; }
+        .search-modal-button { background: #30115e; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; flex-shrink: 0; }
         
-        .search-modal.active {
-            display: flex;
-        }
-        
-        .search-modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            width: 90%;
-            max-width: 400px;
-        }
-        
-        .search-modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .search-modal-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        .search-modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: #666;
-            cursor: pointer;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .search-modal-input-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border: 2px solid #30115e;
-            padding: 10px;
-            border-radius: 8px;
-        }
-        
-        .search-modal-input {
-            border: none;
-            outline: none;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            width: 100%;
-            color: #333;
-        }
-        
-        .search-modal-button {
-            background: #30115e;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-        
-        /* Modal de compartir WhatsApp */
-        .share-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 3000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .share-modal.active {
-            display: flex;
-        }
-        
-        .share-modal-content {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            width: 90%;
-            max-width: 450px;
-        }
-        
-        .share-modal-header {
-            margin-bottom: 20px;
-        }
-        
-        .share-modal-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        
-        .share-modal-subtitle {
-            font-size: 13px;
-            color: #6b7280;
-        }
-        
-        .share-options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        
-        .share-option {
-            padding: 16px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .share-option:hover {
-            border-color: #30115e;
-            background: #f9fafb;
-        }
-        
-        .share-option-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #30115e;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        
-        .share-option-icon svg {
-            width: 22px;
-            height: 22px;
-            fill: white;
-        }
-        
-        .share-option-text {
-            flex: 1;
-        }
-        
-        .share-option-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 3px;
-        }
-        
-        .share-option-desc {
-            font-size: 12px;
-            color: #6b7280;
-        }
-        
-        .share-numero-input-container {
-            display: none;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #f9fafb;
-            border-radius: 8px;
-            border: 2px solid #30115e;
-        }
-        
-        .share-numero-input-container.active {
-            display: block;
-        }
-        
-        .share-numero-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 8px;
-        }
-        
-        .share-numero-help {
-            font-size: 12px;
-            color: #333;
-            background: white;
-            padding: 10px 12px;
-            border-radius: 4px;
-            border: 2px solid #30115e;
-            margin-bottom: 10px;
-        }
-        
-        .share-numero-help strong {
-            color: #30115e;
-            font-weight: 700;
-        }
-        
-        .share-numero-input {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #e5e7eb;
-            border-radius: 6px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-        .share-numero-input:focus {
-            outline: none;
-            border-color: #30115e;
-        }
-        
-        .share-numero-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 12px;
-        }
-        
-        .share-numero-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 6px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .share-numero-btn-cancel {
-            background: #e5e7eb;
-            color: #333;
-        }
-        
-        .share-numero-btn-cancel:hover {
-            background: #d1d5db;
-        }
-        
-        .share-numero-btn-save {
-            background: #30115e;
-            color: white;
-        }
-        
-        .share-numero-btn-save:hover {
-            background: #4a1d7a;
-        }
-        
-        .share-modal-close {
-            width: 100%;
-            padding: 12px;
-            background: #e5e7eb;
-            color: #333;
-            border: none;
-            border-radius: 6px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .share-modal-close:hover {
-            background: #d1d5db;
-        }
-        
-        .share-warning {
-            display: none;
-            padding: 12px;
-            background: #fef3c7;
-            border: 2px solid #f59e0b;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            font-size: 13px;
-            color: #92400e;
-        }
-        
-        .share-warning.active {
-            display: block;
-        }
-        
-        .share-warning strong {
-            color: #78350f;
-            font-weight: 700;
-        }
-        
-        /* Selector de estado en InfoWindow */
-        .estado-selector {
-            padding: 8px 30px 8px 12px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 6px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 12px;
-            flex: 1;
-        }
+        .share-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3000; align-items: center; justify-content: center; }
+        .share-modal.active { display: flex; }
+        .share-modal-content { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); width: 90%; max-width: 450px; }
+        .share-modal-header { margin-bottom: 20px; }
+        .share-modal-title { font-size: 18px; font-weight: 700; color: #333; margin-bottom: 5px; }
+        .share-modal-subtitle { font-size: 13px; color: #6b7280; }
+        .share-options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .share-option { padding: 16px; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 12px; }
+        .share-option:hover { border-color: #30115e; background: #f9fafb; }
+        .share-option-icon { width: 40px; height: 40px; border-radius: 50%; background: #30115e; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .share-option-icon svg { width: 22px; height: 22px; fill: white; }
+        .share-option-text { flex: 1; }
+        .share-option-title { font-size: 15px; font-weight: 600; color: #333; margin-bottom: 3px; }
+        .share-option-desc { font-size: 12px; color: #6b7280; }
+        .share-numero-input-container { display: none; margin-bottom: 20px; padding: 15px; background: #f9fafb; border-radius: 8px; border: 2px solid #30115e; }
+        .share-numero-input-container.active { display: block; }
+        .share-numero-label { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 8px; }
+        .share-numero-help { font-size: 12px; color: #333; background: white; padding: 10px 12px; border-radius: 4px; border: 2px solid #30115e; margin-bottom: 10px; }
+        .share-numero-help strong { color: #30115e; font-weight: 700; }
+        .share-numero-input { width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 500; }
+        .share-numero-input:focus { outline: none; border-color: #30115e; }
+        .share-numero-buttons { display: flex; gap: 10px; margin-top: 12px; }
+        .share-numero-btn { flex: 1; padding: 10px; border: none; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+        .share-numero-btn-cancel { background: #e5e7eb; color: #333; }
+        .share-numero-btn-cancel:hover { background: #d1d5db; }
+        .share-numero-btn-save { background: #30115e; color: white; }
+        .share-numero-btn-save:hover { background: #4a1d7a; }
+        .share-modal-close { width: 100%; padding: 12px; background: #e5e7eb; color: #333; border: none; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+        .share-modal-close:hover { background: #d1d5db; }
+        .share-warning { display: none; padding: 12px; background: #fef3c7; border: 2px solid #f59e0b; border-radius: 6px; margin-bottom: 15px; font-size: 13px; color: #92400e; }
+        .share-warning.active { display: block; }
+        .share-warning strong { color: #78350f; font-weight: 700; }
         
         .estado-selector {
+            padding: 8px 30px 8px 12px; border: 2px solid rgba(255,255,255,0.3); border-radius: 6px;
+            font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer;
+            transition: all 0.2s ease; appearance: none; -webkit-appearance: none; -moz-appearance: none;
+            background-repeat: no-repeat; background-position: right 10px center; background-size: 12px; flex: 1;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='white' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
         }
+        .estado-selector:hover { border-color: rgba(255,255,255,0.5); }
+        .estado-selector:focus { outline: none; border-color: white; box-shadow: 0 0 0 3px rgba(255,255,255,0.2); }
+        .estado-selector option { background: white; color: #333; padding: 8px; font-weight: 600; }
         
-        .estado-selector:hover {
-            border-color: rgba(255, 255, 255, 0.5);
-        }
+        .infowindow-bottom-bar { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+        .infowindow-actions-inline { display: flex; gap: 8px; flex-shrink: 0; }
+        .action-icon-btn { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #e5e7eb; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; padding: 0; }
+        .action-icon-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .action-icon-btn svg { width: 18px; height: 18px; }
+        .action-whatsapp { border-color: #25D366; }
+        .action-whatsapp:hover { background: #25D366; border-color: #25D366; }
+        .action-whatsapp svg { fill: #25D366; }
+        .action-whatsapp:hover svg { fill: white; }
+        .action-pdf { border-color: #ef4444; }
+        .action-pdf:hover { background: #ef4444; border-color: #ef4444; }
+        .action-pdf svg { fill: #ef4444; }
+        .action-pdf:hover svg { fill: white; }
         
-        .estado-selector:focus {
-            outline: none;
-            border-color: white;
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
-        }
+        .gm-style-iw-chr { display: none !important; }
+        .gm-style-iw button { display: none !important; }
+        .gm-style .gm-style-iw-c { padding: 0 !important; }
+        .gm-style .gm-style-iw-d { overflow: auto !important; max-height: none !important; }
         
-        .estado-selector option {
-            background: white;
-            color: #333;
-            padding: 8px;
-            font-weight: 600;
-        }
+        .infowindow-container { max-width: 350px; padding: 0; margin: 0; position: relative; overflow: visible; }
+        .infowindow-image { width: 100%; height: 200px; object-fit: cover; display: block; margin: 0; }
+        .infowindow-content { padding: 15px; }
+        .infowindow-title { margin: 0 0 10px 0; color: #333; font-size: 16px; font-weight: 600; padding-right: 50px; word-wrap: break-word; overflow-wrap: break-word; line-height: 1.4; }
+        .infowindow-date { margin: 0 0 10px 0; font-size: 13px; font-weight: 600; color: #6b7280; }
+        .infowindow-field { margin: 5px 0; font-size: 14px; color: #555; }
+        .infowindow-field strong { color: #333; }
+        .infowindow-badge { display: inline-block; margin-top: 10px; padding: 6px 12px; border-radius: 5px; font-size: 12px; font-weight: 600; color: white; }
+        .infowindow-share-btn { position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: #30115e; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; z-index: 10; }
+        .infowindow-container:has(.infowindow-image) .infowindow-share-btn { top: 215px; }
+        .infowindow-share-btn:hover { transform: scale(1.1); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .infowindow-share-btn svg { width: 24px; height: 24px; }
         
-        .estado-selector option:hover {
-            background: #f3f4f6;
-        }
+        .reclamos-list { padding: 15px; max-height: 400px; overflow-y: auto; }
+        .reclamos-list-title { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 15px; }
+        .reclamo-item { padding: 12px; margin-bottom: 10px; border: 2px solid #e5e7eb; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
+        .reclamo-item:hover { border-color: #30115e; background: #f9fafb; }
+        .reclamo-item-title { font-size: 14px; font-weight: 600; color: #333; margin-bottom: 5px; }
+        .reclamo-item-date { font-size: 12px; color: #6b7280; margin-bottom: 5px; }
+        .reclamo-item-badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; color: white; }
         
-        /* Barra inferior con estado + acciones */
-        .infowindow-bottom-bar {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 5px;
-        }
-        
-        .infowindow-actions-inline {
-            display: flex;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-        
-        .action-icon-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 2px solid #e5e7eb;
-            background: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            padding: 0;
-        }
-        
-        .action-icon-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        
-        .action-icon-btn svg {
-            width: 18px;
-            height: 18px;
-        }
-        
-        .action-whatsapp {
-            border-color: #25D366;
-        }
-        
-        .action-whatsapp:hover {
-            background: #25D366;
-            border-color: #25D366;
-        }
-        
-        .action-whatsapp svg {
-            fill: #25D366;
-        }
-        
-        .action-whatsapp:hover svg {
-            fill: white;
-        }
-        
-        .action-pdf {
-            border-color: #ef4444;
-        }
-        
-        .action-pdf:hover {
-            background: #ef4444;
-            border-color: #ef4444;
-        }
-        
-        .action-pdf svg {
-            fill: #ef4444;
-        }
-        
-        .action-pdf:hover svg {
-            fill: white;
-        }
-        
-        /* Ocultar el botón de cerrar del InfoWindow */
-        .gm-style-iw-chr {
-            display: none !important;
-        }
-        
-        .gm-style-iw button {
-            display: none !important;
-        }
-        
-        /* Ajustar padding del InfoWindow */
-        .gm-style .gm-style-iw-c {
-            padding: 0 !important;
-        }
-        
-        .gm-style .gm-style-iw-d {
-            overflow: auto !important;
-            max-height: none !important;
-        }
-        
-        /* Estilos para el InfoWindow */
-        .infowindow-container {
-            max-width: 350px;
-            padding: 0;
-            margin: 0;
-            position: relative;
-            overflow: visible;
-        }
-        
-        .infowindow-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            display: block;
-            margin: 0;
-        }
-        
-        .infowindow-content {
-            padding: 15px;
-        }
-        
-        .infowindow-title {
-            margin: 0 0 10px 0;
-            color: #333;
-            font-size: 16px;
-            font-weight: 600;
-            padding-right: 50px;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            line-height: 1.4;
-        }
-        
-        .infowindow-date {
-            margin: 0 0 10px 0;
-            font-size: 13px;
-            font-weight: 600;
-            color: #6b7280;
-        }
-        
-        .infowindow-field {
-            margin: 5px 0;
-            font-size: 14px;
-            color: #555;
-        }
-        
-        .infowindow-field strong {
-            color: #333;
-        }
-        
-        .infowindow-badge {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 6px 12px;
-            border-radius: 5px;
-            font-size: 12px;
-            font-weight: 600;
-            color: white;
-        }
-        
-        .infowindow-share-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 40px;
-            height: 40px;
-            background: #30115e;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            z-index: 10;
-        }
-        
-        .infowindow-container:has(.infowindow-image) .infowindow-share-btn {
-            top: 215px;
-        }
-        
-        .infowindow-share-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-        
-        .infowindow-share-btn svg {
-            width: 24px;
-            height: 24px;
-        }
-        
-        /* Lista de reclamos múltiples */
-        .reclamos-list {
-            padding: 15px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        .reclamos-list-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 15px;
-        }
-        
-        .reclamo-item {
-            padding: 12px;
-            margin-bottom: 10px;
-            border: 2px solid #e5e7eb;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .reclamo-item:hover {
-            border-color: #30115e;
-            background: #f9fafb;
-        }
-        
-        .reclamo-item-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        
-        .reclamo-item-date {
-            font-size: 12px;
-            color: #6b7280;
-            margin-bottom: 5px;
-        }
-        
-        .reclamo-item-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-            color: white;
-        }
-        
-        /* Estilos para mobile */
         @media (max-width: 768px) {
-            .search-container {
-                display: none;
-            }
-            
-            .search-button-mobile {
-                display: flex;
-            }
-
-            #header {
-                padding: 14px 60px;
-            }
-
-            #header h1 {
-                font-size: 18px;
-            }
-
-            #total-counter {
-                font-size: 14px;
-                padding: 10px 12px;
-                margin: 10px 8px;
-                max-width: 160px;
-                min-height: 40px;
-            }
-            
-            .filters {
-                padding: 10px;
-                margin: 10px 8px;
-                font-size: 12px;
-                max-width: 160px;
-                transition: all 0.3s ease;
-            }
-            
-            .filters.collapsed {
-                padding: 10px;
-                max-width: 50px;
-                min-height: 40px;
-            }
-            
-            .filters.collapsed .filter-buttons {
-                display: none;
-            }
-            
-            .filters h3 {
-                font-size: 14px;
-                margin-bottom: 8px;
-                cursor: pointer;
-                user-select: none;
-            }
-            
-            .filters.collapsed h3 {
-                margin: 0;
-                writing-mode: vertical-rl;
-                text-orientation: mixed;
-            }
-            
-            .filter-button {
-                padding: 8px 10px;
-                font-size: 12px;
-                margin: 5px 0;
-            }
-            
-            .filter-dot {
-                width: 12px;
-                height: 12px;
-            }
-            
-            .filter-count {
-                font-size: 12px;
-            }
-            
-            .center-map-btn {
-                width: 40px;
-                height: 40px;
-                margin: 10px;
-            }
-            
-            .center-map-btn svg {
-                width: 20px;
-                height: 20px;
-            }
-            
-            .infowindow-container {
-                max-width: 280px;
-            }
-            
-            .infowindow-image {
-                height: 160px;
-            }
-            
-            .infowindow-share-btn {
-                width: 36px;
-                height: 36px;
-                top: 10px;
-                right: 10px;
-            }
-            
-            .infowindow-container:has(.infowindow-image) .infowindow-share-btn {
-                top: 170px;
-            }
-            
-            .infowindow-share-btn svg {
-                width: 20px;
-                height: 20px;
-            }
-            
-            .reclamos-list {
-                max-height: 300px;
-            }
+            .search-container { display: none; }
+            .search-button-mobile { display: flex; }
+            #header { padding: 14px 60px; }
+            #header h1 { font-size: 18px; }
+            #header-user-name { display: none; }
+            #total-counter { font-size: 14px; padding: 10px 12px; margin: 10px 8px; max-width: 160px; min-height: 40px; }
+            .filters { padding: 10px; margin: 10px 8px; font-size: 12px; max-width: 160px; transition: all 0.3s ease; }
+            .filters.collapsed { padding: 10px; max-width: 50px; min-height: 40px; }
+            .filters.collapsed .filter-buttons { display: none; }
+            .filters h3 { font-size: 14px; margin-bottom: 8px; cursor: pointer; user-select: none; }
+            .filters.collapsed h3 { margin: 0; writing-mode: vertical-rl; text-orientation: mixed; }
+            .filter-button { padding: 8px 10px; font-size: 12px; margin: 5px 0; }
+            .filter-dot { width: 12px; height: 12px; }
+            .filter-count { font-size: 12px; }
+            .center-map-btn { width: 40px; height: 40px; margin: 10px; }
+            .center-map-btn svg { width: 20px; height: 20px; }
+            .infowindow-container { max-width: 280px; }
+            .infowindow-image { height: 160px; }
+            .infowindow-share-btn { width: 36px; height: 36px; top: 10px; right: 10px; }
+            .infowindow-container:has(.infowindow-image) .infowindow-share-btn { top: 170px; }
+            .infowindow-share-btn svg { width: 20px; height: 20px; }
+            .reclamos-list { max-height: 300px; }
         }
     </style>
 </head>
 <body>
+
+    <!-- ── AUTH GUARD ── -->
+    <script>
+    (function() {
+        var saved = sessionStorage.getItem('lla_user');
+        if (!saved) { window.location.replace('index.html'); return; }
+        try { JSON.parse(saved); } catch(e) { window.location.replace('index.html'); }
+    })();
+    </script>
+
     <div id="header">
         <a href="index.html" class="header-back-btn" title="Volver al inicio">
             <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
@@ -1031,6 +264,11 @@
         <div>
             <h1>🗺️ Mapa de Reclamos - San Isidro</h1>
             <p>Seguimiento en tiempo real de reclamos municipales</p>
+        </div>
+        <!-- Avatar de usuario -->
+        <div id="header-user">
+            <span id="header-user-name"></span>
+            <div id="header-avatar-wrap"></div>
         </div>
     </div>
     
@@ -1050,9 +288,7 @@
                 <button class="search-modal-close" id="close-search-modal">×</button>
             </div>
             <div class="search-modal-input-container">
-                <svg class="search-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                </svg>
+                <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
                 <input type="text" class="search-modal-input" id="search-input-mobile" placeholder="Ej: Av. Libertador 16500">
                 <button class="search-modal-button" id="search-button-modal">Buscar</button>
             </div>
@@ -1066,25 +302,19 @@
                 <h3 class="share-modal-title">Compartir Reclamo</h3>
                 <p class="share-modal-subtitle">Elegí el tipo de mensaje a enviar</p>
             </div>
-            
             <div class="share-options">
                 <div class="share-option" id="share-interno">
                     <div class="share-option-icon">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                        </svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                     </div>
                     <div class="share-option-text">
                         <div class="share-option-title">📋 Uso Interno</div>
                         <div class="share-option-desc">Para compartir con el equipo</div>
                     </div>
                 </div>
-                
                 <div class="share-option" id="share-vecino">
                     <div class="share-option-icon">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                        </svg>
+                        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
                     </div>
                     <div class="share-option-text">
                         <div class="share-option-title">👤 Mensaje al Vecino</div>
@@ -1092,23 +322,18 @@
                     </div>
                 </div>
             </div>
-            
             <div class="share-numero-input-container" id="share-numero-container">
                 <div class="share-numero-label">Ingrese el número de reclamo de la Municipalidad:</div>
-                <div class="share-numero-help">
-                    <strong>Recordá:</strong> Llamá al <strong>*147</strong> para elevar el reclamo a la municipalidad y obtener este número
-                </div>
+                <div class="share-numero-help"><strong>Recordá:</strong> Llamá al <strong>*147</strong> para elevar el reclamo a la municipalidad y obtener este número</div>
                 <input type="text" class="share-numero-input" id="share-numero-input" placeholder="Número de reclamo">
                 <div class="share-numero-buttons">
                     <button class="share-numero-btn share-numero-btn-cancel" id="share-numero-cancel">Cancelar</button>
                     <button class="share-numero-btn share-numero-btn-save" id="share-numero-save">Guardar y Enviar</button>
                 </div>
             </div>
-            
             <div class="share-warning" id="share-warning">
                 ⚠️ <strong>Ya se envió un mensaje al vecino para este reclamo.</strong> Si necesitás enviarlo nuevamente, seleccioná la opción que desees.
             </div>
-            
             <button class="share-modal-close" id="close-share-modal">Cerrar</button>
         </div>
     </div>
@@ -1116,52 +341,41 @@
     <div id="map"></div>
 
     <script>
-        let map;
-        let geocoder;
-        let currentInfoWindow = null;
-        let markers = [];
-        let reclamosData = [];
+        let map, geocoder, currentInfoWindow = null, markers = [], reclamosData = [];
         const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzAW53ehSqPdkudN5mkyValqSId0xCn7H7NLnvMEpMbkoUeA-0uNBewnuAmruhARzwq/exec';
         
-        const COLORS = {
-            'Sin tratamiento': '#ef4444',
-            'En proceso': '#f97316',
-            'Resuelto': '#22c55e'
-        };
-        
-        const filterState = {
-            'Sin tratamiento': true,
-            'En proceso': true,
-            'Resuelto': true
-        };
-        
-        const stateCounts = {
-            'Sin tratamiento': 0,
-            'En proceso': 0,
-            'Resuelto': 0
-        };
+        const COLORS = { 'Sin tratamiento': '#ef4444', 'En proceso': '#f97316', 'Resuelto': '#22c55e' };
+        const filterState = { 'Sin tratamiento': true, 'En proceso': true, 'Resuelto': true };
+        const stateCounts = { 'Sin tratamiento': 0, 'En proceso': 0, 'Resuelto': 0 };
+
+        // ── CARGAR SESIÓN DE USUARIO ──────────────────────────────
+        function loadUserSession() {
+            try {
+                const user = JSON.parse(sessionStorage.getItem('lla_user') || '{}');
+                if (!user.name) return;
+                document.getElementById('header-user-name').textContent = user.given_name || user.name;
+                const wrap = document.getElementById('header-avatar-wrap');
+                if (user.picture) {
+                    wrap.innerHTML = `<img src="${user.picture}" style="width:34px;height:34px;border-radius:50%;border:2px solid rgba(167,139,250,0.6);object-fit:cover;cursor:pointer;" title="${user.name}" referrerpolicy="no-referrer" onclick="window.location='index.html'">`;
+                } else {
+                    const inicial = (user.name || 'U')[0].toUpperCase();
+                    wrap.innerHTML = `<div style="width:34px;height:34px;border-radius:50%;background:rgba(167,139,250,0.3);border:2px solid rgba(167,139,250,0.6);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:white;cursor:pointer;" title="${user.name}" onclick="window.location='index.html'">${inicial}</div>`;
+                }
+            } catch(e) {}
+        }
         
         function initMap() {
+            loadUserSession();
+
             const sanIsidro = { lat: -34.4707, lng: -58.5129 };
-            
             map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 13,
-                center: sanIsidro,
-                mapTypeControl: true,
-                streetViewControl: true,
-                fullscreenControl: true,
-                zoomControl: true
+                zoom: 13, center: sanIsidro,
+                mapTypeControl: true, streetViewControl: true, fullscreenControl: true, zoomControl: true
             });
-            
             geocoder = new google.maps.Geocoder();
-            
             map.addListener('click', function() {
-                if (currentInfoWindow) {
-                    currentInfoWindow.close();
-                    currentInfoWindow = null;
-                }
+                if (currentInfoWindow) { currentInfoWindow.close(); currentInfoWindow = null; }
             });
-            
             addFilters();
             setupSearchModal();
             loadReclamos();
@@ -1170,44 +384,27 @@
         function addFilters() {
             const filtersDiv = document.createElement('div');
             filtersDiv.className = 'filters collapsed';
-            
             const totalCounterDiv = document.createElement('div');
             totalCounterDiv.id = 'total-counter';
             totalCounterDiv.innerHTML = 'Reclamos: <span id="total-count">0</span>';
-            
             filtersDiv.innerHTML = `
                 <h3>Filtrar por estado</h3>
                 <div class="filter-buttons">
                     <button class="filter-button active" data-estado="Sin tratamiento">
-                        <div class="filter-left">
-                            <div class="filter-dot dot-red"></div>
-                            <span class="filter-text">Sin tratamiento</span>
-                        </div>
+                        <div class="filter-left"><div class="filter-dot dot-red"></div><span class="filter-text">Sin tratamiento</span></div>
                         <span class="filter-count" id="count-sin">0</span>
                     </button>
                     <button class="filter-button active" data-estado="En proceso">
-                        <div class="filter-left">
-                            <div class="filter-dot dot-orange"></div>
-                            <span class="filter-text">En proceso</span>
-                        </div>
+                        <div class="filter-left"><div class="filter-dot dot-orange"></div><span class="filter-text">En proceso</span></div>
                         <span class="filter-count" id="count-proceso">0</span>
                     </button>
                     <button class="filter-button active" data-estado="Resuelto">
-                        <div class="filter-left">
-                            <div class="filter-dot dot-green"></div>
-                            <span class="filter-text">Resuelto</span>
-                        </div>
+                        <div class="filter-left"><div class="filter-dot dot-green"></div><span class="filter-text">Resuelto</span></div>
                         <span class="filter-count" id="count-resuelto">0</span>
                     </button>
-                </div>
-            `;
-            
-            filtersDiv.querySelector('h3').addEventListener('click', () => {
-                filtersDiv.classList.toggle('collapsed');
-            });
-            
-            const buttons = filtersDiv.querySelectorAll('.filter-button');
-            buttons.forEach(button => {
+                </div>`;
+            filtersDiv.querySelector('h3').addEventListener('click', () => filtersDiv.classList.toggle('collapsed'));
+            filtersDiv.querySelectorAll('.filter-button').forEach(button => {
                 button.addEventListener('click', () => {
                     const estado = button.dataset.estado;
                     filterState[estado] = !filterState[estado];
@@ -1215,20 +412,14 @@
                     updateMarkers();
                 });
             });
-            
             const centerBtn = addCenterMapButton();
             const { searchContainer, searchButtonMobile } = addSearchControls();
-            
             function updateControlsPosition() {
-                const currentMobile = window.innerWidth <= 768;
-                
                 map.controls[google.maps.ControlPosition.TOP_LEFT].clear();
                 map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].clear();
                 map.controls[google.maps.ControlPosition.LEFT_BOTTOM].clear();
-                
                 map.controls[google.maps.ControlPosition.TOP_LEFT].push(totalCounterDiv);
-                
-                if (currentMobile) {
+                if (window.innerWidth <= 768) {
                     map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(centerBtn);
                     map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(filtersDiv);
                     map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(searchButtonMobile);
@@ -1238,7 +429,6 @@
                     map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(centerBtn);
                 }
             }
-            
             updateControlsPosition();
             window.addEventListener('resize', updateControlsPosition);
         }
@@ -1246,29 +436,17 @@
         function addCenterMapButton() {
             const centerBtn = document.createElement('div');
             centerBtn.className = 'center-map-btn';
-            centerBtn.innerHTML = `
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
-                </svg>
-            `;
+            centerBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>`;
             centerBtn.title = 'Ver todos los reclamos';
-            
             const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-            
             centerBtn.addEventListener('click', () => {
                 if (isTouchDevice) {
                     centerBtn.style.background = '#30115e';
                     centerBtn.querySelector('svg').style.fill = 'white';
-                    
-                    setTimeout(() => {
-                        centerBtn.style.background = 'white';
-                        centerBtn.querySelector('svg').style.fill = '#30115e';
-                    }, 150);
+                    setTimeout(() => { centerBtn.style.background = 'white'; centerBtn.querySelector('svg').style.fill = '#30115e'; }, 150);
                 }
-                
                 centerMapOnMarkers();
             });
-            
             return centerBtn;
         }
         
@@ -1276,254 +454,131 @@
             const searchContainer = document.createElement('div');
             searchContainer.className = 'search-container';
             searchContainer.innerHTML = `
-                <svg class="search-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                </svg>
-                <input type="text" class="search-input" id="search-input-desktop" placeholder="Buscar dirección...">
-            `;
-            
+                <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" class="search-input" id="search-input-desktop" placeholder="Buscar dirección...">`;
             const searchButtonMobile = document.createElement('div');
             searchButtonMobile.className = 'search-button-mobile';
-            searchButtonMobile.innerHTML = `
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                </svg>
-            `;
-            
-            const searchInputDesktop = searchContainer.querySelector('#search-input-desktop');
-            searchInputDesktop.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    performSearch(searchInputDesktop.value);
-                }
+            searchButtonMobile.innerHTML = `<svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>`;
+            searchContainer.querySelector('#search-input-desktop').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') performSearch(e.target.value);
             });
-            
             searchButtonMobile.addEventListener('click', () => {
                 document.getElementById('search-modal').classList.add('active');
                 document.getElementById('search-input-mobile').focus();
             });
-            
             return { searchContainer, searchButtonMobile };
         }
         
         function setupSearchModal() {
-            document.getElementById('close-search-modal').addEventListener('click', () => {
-                document.getElementById('search-modal').classList.remove('active');
-            });
-            
-            document.getElementById('search-modal').addEventListener('click', (e) => {
-                if (e.target.id === 'search-modal') {
-                    document.getElementById('search-modal').classList.remove('active');
-                }
-            });
-            
+            document.getElementById('close-search-modal').addEventListener('click', () => document.getElementById('search-modal').classList.remove('active'));
+            document.getElementById('search-modal').addEventListener('click', (e) => { if (e.target.id === 'search-modal') document.getElementById('search-modal').classList.remove('active'); });
             document.getElementById('search-button-modal').addEventListener('click', () => {
-                const query = document.getElementById('search-input-mobile').value;
-                performSearch(query);
+                performSearch(document.getElementById('search-input-mobile').value);
                 document.getElementById('search-modal').classList.remove('active');
             });
-            
             document.getElementById('search-input-mobile').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    const query = document.getElementById('search-input-mobile').value;
-                    performSearch(query);
-                    document.getElementById('search-modal').classList.remove('active');
-                }
+                if (e.key === 'Enter') { performSearch(e.target.value); document.getElementById('search-modal').classList.remove('active'); }
             });
         }
         
         function performSearch(query) {
-            if (!query.trim()) {
-                alert('Por favor ingresa una dirección');
-                return;
-            }
-            
+            if (!query.trim()) { alert('Por favor ingresa una dirección'); return; }
             let searchQuery = query;
             if (!query.toLowerCase().includes('san isidro') && !query.toLowerCase().includes('buenos aires')) {
                 searchQuery = `${query}, San Isidro, Buenos Aires, Argentina`;
             }
-            
             geocoder.geocode({ address: searchQuery }, (results, status) => {
                 if (status === 'OK') {
-                    const location = results[0].geometry.location;
-                    map.setCenter(location);
+                    map.setCenter(results[0].geometry.location);
                     map.setZoom(16);
-                    
                     const tempMarker = new google.maps.Marker({
-                        position: location,
-                        map: map,
-                        animation: google.maps.Animation.DROP,
-                        icon: {
-                            path: google.maps.SymbolPath.CIRCLE,
-                            scale: 8,
-                            fillColor: '#667eea',
-                            fillOpacity: 0.8,
-                            strokeColor: '#ffffff',
-                            strokeWeight: 2
-                        }
+                        position: results[0].geometry.location, map: map, animation: google.maps.Animation.DROP,
+                        icon: { path: google.maps.SymbolPath.CIRCLE, scale: 8, fillColor: '#667eea', fillOpacity: 0.8, strokeColor: '#ffffff', strokeWeight: 2 }
                     });
-                    
-                    setTimeout(() => {
-                        tempMarker.setMap(null);
-                    }, 3000);
-                } else {
-                    alert('No se pudo encontrar la dirección. Intenta con otra dirección.');
-                }
+                    setTimeout(() => tempMarker.setMap(null), 3000);
+                } else { alert('No se pudo encontrar la dirección.'); }
             });
         }
         
         function centerMapOnMarkers() {
             const visibleMarkers = markers.filter(m => m.marker.getVisible());
-            
-            if (visibleMarkers.length === 0) {
-                alert('No hay reclamos visibles para mostrar');
-                return;
-            }
-            
+            if (visibleMarkers.length === 0) { alert('No hay reclamos visibles para mostrar'); return; }
             const bounds = new google.maps.LatLngBounds();
-            visibleMarkers.forEach(markerObj => {
-                bounds.extend(markerObj.marker.getPosition());
-            });
-            
+            visibleMarkers.forEach(m => bounds.extend(m.marker.getPosition()));
             map.fitBounds(bounds);
-            
-            if (visibleMarkers.length === 1) {
-                map.setZoom(15);
-            }
+            if (visibleMarkers.length === 1) map.setZoom(15);
         }
         
         function updateMarkers() {
-            markers.forEach(markerObj => {
-                const shouldShow = filterState[markerObj.estado];
-                markerObj.marker.setVisible(shouldShow);
-            });
+            markers.forEach(m => m.marker.setVisible(filterState[m.estado]));
         }
         
         function updateCounters() {
             document.getElementById('count-sin').textContent = stateCounts['Sin tratamiento'];
             document.getElementById('count-proceso').textContent = stateCounts['En proceso'];
             document.getElementById('count-resuelto').textContent = stateCounts['Resuelto'];
-            
-            const total = stateCounts['Sin tratamiento'] + stateCounts['En proceso'] + stateCounts['Resuelto'];
-            document.getElementById('total-count').textContent = total;
+            document.getElementById('total-count').textContent = stateCounts['Sin tratamiento'] + stateCounts['En proceso'] + stateCounts['Resuelto'];
         }
         
         function getRelativeTime(fechaString) {
             if (!fechaString) return null;
-            
             try {
                 let fecha;
-                
                 if (fechaString.includes('/')) {
                     const partes = fechaString.split(' ');
-                    const fechaParte = partes[0].split('/');
-                    const horaParte = partes[1] ? partes[1] : '00:00:00';
-                    
-                    const dia = fechaParte[0].padStart(2, '0');
-                    const mes = fechaParte[1].padStart(2, '0');
-                    const anio = fechaParte[2];
-                    
-                    fecha = new Date(`${anio}-${mes}-${dia}T${horaParte}`);
-                } else {
-                    fecha = new Date(fechaString);
-                }
-                
-                if (isNaN(fecha.getTime())) {
-                    console.error('Fecha inválida:', fechaString);
-                    return null;
-                }
-                
-                const ahora = new Date();
-                const diferenciaDias = Math.floor((ahora - fecha) / (1000 * 60 * 60 * 24));
-                
-                if (diferenciaDias < 7) {
-                    if (diferenciaDias === 0) return 'Hoy';
-                    if (diferenciaDias === 1) return 'Ayer';
-                    return `Hace ${diferenciaDias} días`;
-                } else {
-                    const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-                    return `${fecha.getDate()} ${meses[fecha.getMonth()]} ${fecha.getFullYear()}`;
-                }
-            } catch (error) {
-                console.error('Error procesando fecha:', fechaString, error);
-                return null;
-            }
+                    const fp = partes[0].split('/');
+                    fecha = new Date(`${fp[2]}-${fp[1].padStart(2,'0')}-${fp[0].padStart(2,'0')}T${partes[1] || '00:00:00'}`);
+                } else { fecha = new Date(fechaString); }
+                if (isNaN(fecha.getTime())) return null;
+                const dias = Math.floor((new Date() - fecha) / 86400000);
+                if (dias === 0) return 'Hoy';
+                if (dias === 1) return 'Ayer';
+                if (dias < 7) return `Hace ${dias} días`;
+                const m = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+                return `${fecha.getDate()} ${m[fecha.getMonth()]} ${fecha.getFullYear()}`;
+            } catch(e) { return null; }
         }
         
-        function getLocationKey(lat, lng) {
-            return `${lat.toFixed(4)},${lng.toFixed(4)}`;
-        }
+        function getLocationKey(lat, lng) { return `${lat.toFixed(4)},${lng.toFixed(4)}`; }
         
         async function loadReclamos() {
             try {
-                const response = await fetch(SHEET_URL);
-                const reclamos = await response.json();
-                
-                console.log('Reclamos cargados:', reclamos.length);
-                
+                const reclamos = await (await fetch(SHEET_URL)).json();
                 if (reclamos.length === 0) {
                     document.getElementById('loading-text').textContent = 'No hay reclamos para mostrar';
-                    setTimeout(() => {
-                        document.getElementById('loading').style.display = 'none';
-                    }, 2000);
+                    setTimeout(() => document.getElementById('loading').style.display = 'none', 2000);
                     return;
                 }
-                
-                reclamos.forEach(reclamo => {
-                    const estado = reclamo.estado || 'Sin tratamiento';
-                    stateCounts[estado] = (stateCounts[estado] || 0) + 1;
-                });
+                reclamos.forEach(r => { stateCounts[r.estado || 'Sin tratamiento'] = (stateCounts[r.estado || 'Sin tratamiento'] || 0) + 1; });
                 updateCounters();
-                
                 let processed = 0;
                 for (const reclamo of reclamos) {
                     await geocodeReclamo(reclamo);
                     processed++;
-                    
-                    const percentage = Math.round((processed / reclamos.length) * 100);
-                    
-                    document.getElementById('loading-text').textContent = `Procesando reclamos...`;
-                    document.getElementById('progress-bar').style.width = percentage + '%';
-                    document.getElementById('progress-text').textContent = `${processed}/${reclamos.length} (${percentage}%)`;
+                    const pct = Math.round((processed / reclamos.length) * 100);
+                    document.getElementById('loading-text').textContent = 'Procesando reclamos...';
+                    document.getElementById('progress-bar').style.width = pct + '%';
+                    document.getElementById('progress-text').textContent = `${processed}/${reclamos.length} (${pct}%)`;
                 }
-                
                 const locationGroups = {};
                 reclamosData.forEach(item => {
                     const key = getLocationKey(item.lat, item.lng);
-                    if (!locationGroups[key]) {
-                        locationGroups[key] = [];
-                    }
+                    if (!locationGroups[key]) locationGroups[key] = [];
                     locationGroups[key].push(item);
                 });
-                
-                Object.values(locationGroups).forEach(group => {
-                    createMarkerForGroup(group);
-                });
-                
+                Object.values(locationGroups).forEach(group => createMarkerForGroup(group));
                 document.getElementById('loading').style.display = 'none';
-                
-            } catch (error) {
+            } catch(error) {
                 console.error('Error cargando reclamos:', error);
-                document.getElementById('loading-text').innerHTML = '<p style="color: red;">Error al cargar reclamos</p>';
+                document.getElementById('loading-text').innerHTML = '<p style="color:red;">Error al cargar reclamos</p>';
             }
         }
         
         function geocodeReclamo(reclamo) {
             return new Promise((resolve) => {
-                const direccionCompleta = reclamo.direccion;
-                
-                geocoder.geocode({ address: direccionCompleta }, (results, status) => {
+                geocoder.geocode({ address: reclamo.direccion }, (results, status) => {
                     if (status === 'OK') {
-                        const location = results[0].geometry.location;
-                        const estado = reclamo.estado || 'Sin tratamiento';
-                        
-                        reclamosData.push({
-                            ...reclamo,
-                            lat: location.lat(),
-                            lng: location.lng(),
-                            estado: estado
-                        });
-                    } else {
-                        console.error('Geocoding falló para:', reclamo.direccion, status);
+                        reclamosData.push({ ...reclamo, lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng(), estado: reclamo.estado || 'Sin tratamiento' });
                     }
                     resolve();
                 });
@@ -1532,133 +587,53 @@
         
         function createMarkerForGroup(group) {
             const firstItem = group[0];
-            const location = { lat: firstItem.lat, lng: firstItem.lng };
             const isMultiple = group.length > 1;
-            
-            let markerColor = COLORS['Resuelto'];
-            let markerEstado = 'Resuelto';
-            
+            let markerColor = COLORS['Resuelto'], markerEstado = 'Resuelto';
             group.forEach(item => {
-                if (item.estado === 'Sin tratamiento') {
-                    markerColor = COLORS['Sin tratamiento'];
-                    markerEstado = 'Sin tratamiento';
-                } else if (item.estado === 'En proceso' && markerEstado !== 'Sin tratamiento') {
-                    markerColor = COLORS['En proceso'];
-                    markerEstado = 'En proceso';
-                }
+                if (item.estado === 'Sin tratamiento') { markerColor = COLORS['Sin tratamiento']; markerEstado = 'Sin tratamiento'; }
+                else if (item.estado === 'En proceso' && markerEstado !== 'Sin tratamiento') { markerColor = COLORS['En proceso']; markerEstado = 'En proceso'; }
             });
-            
             const tieneFoto = group.some(item => item.foto);
-            
             let markerIcon;
-            
             if (isMultiple) {
-                const svgMarker = `
-                    <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="16" cy="16" r="14" fill="${markerColor}" stroke="white" stroke-width="3"/>
-                        <text x="16" y="21" font-family="Montserrat, Arial" font-size="14" font-weight="700" fill="white" text-anchor="middle">${group.length}</text>
-                    </svg>
-                `;
-                
-                markerIcon = {
-                    url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgMarker),
-                    scaledSize: new google.maps.Size(32, 32),
-                    anchor: new google.maps.Point(16, 16)
-                };
+                const svg = `<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="14" fill="${markerColor}" stroke="white" stroke-width="3"/><text x="16" y="21" font-family="Montserrat,Arial" font-size="14" font-weight="700" fill="white" text-anchor="middle">${group.length}</text></svg>`;
+                markerIcon = { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg), scaledSize: new google.maps.Size(32, 32), anchor: new google.maps.Point(16, 16) };
             } else if (tieneFoto) {
-                const svgMarker = `
-                    <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="14" cy="14" r="11" fill="${markerColor}" stroke="white" stroke-width="2.5"/>
-                        <g transform="translate(20, 6)">
-                            <circle cx="0" cy="0" r="5.5" fill="white" stroke="${markerColor}" stroke-width="1"/>
-                            <rect x="-3" y="-1.5" width="6" height="3" rx="0.5" fill="${markerColor}"/>
-                            <rect x="-2" y="-2.5" width="4" height="1" rx="0.3" fill="${markerColor}"/>
-                            <circle cx="0" cy="0" r="1.2" fill="white"/>
-                        </g>
-                    </svg>
-                `;
-                
-                markerIcon = {
-                    url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgMarker),
-                    scaledSize: new google.maps.Size(28, 28),
-                    anchor: new google.maps.Point(14, 14)
-                };
+                const svg = `<svg width="28" height="28" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="11" fill="${markerColor}" stroke="white" stroke-width="2.5"/><g transform="translate(20,6)"><circle cx="0" cy="0" r="5.5" fill="white" stroke="${markerColor}" stroke-width="1"/><rect x="-3" y="-1.5" width="6" height="3" rx="0.5" fill="${markerColor}"/><rect x="-2" y="-2.5" width="4" height="1" rx="0.3" fill="${markerColor}"/><circle cx="0" cy="0" r="1.2" fill="white"/></g></svg>`;
+                markerIcon = { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg), scaledSize: new google.maps.Size(28, 28), anchor: new google.maps.Point(14, 14) };
             } else {
-                markerIcon = {
-                    path: google.maps.SymbolPath.CIRCLE,
-                    scale: 10,
-                    fillColor: markerColor,
-                    fillOpacity: 0.9,
-                    strokeColor: '#ffffff',
-                    strokeWeight: 2
-                };
+                markerIcon = { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: markerColor, fillOpacity: 0.9, strokeColor: '#ffffff', strokeWeight: 2 };
             }
-            
             const marker = new google.maps.Marker({
-                position: location,
-                map: map,
-                title: isMultiple ? `${group.length} reclamos en esta ubicación` : firstItem.tema,
-                icon: markerIcon
+                position: { lat: firstItem.lat, lng: firstItem.lng }, map: map,
+                title: isMultiple ? `${group.length} reclamos en esta ubicación` : firstItem.tema, icon: markerIcon
             });
-            
-            markers.push({
-                marker: marker,
-                estado: markerEstado
-            });
-            
+            markers.push({ marker, estado: markerEstado });
             marker.addListener('click', () => {
-                if (currentInfoWindow) {
-                    currentInfoWindow.close();
-                }
-                
-                if (isMultiple) {
-                    showReclamosList(group, marker);
-                } else {
-                    showReclamoDetail(firstItem, marker);
-                }
+                if (currentInfoWindow) currentInfoWindow.close();
+                if (isMultiple) showReclamosList(group, marker);
+                else showReclamoDetail(firstItem, marker);
             });
         }
         
         function showReclamosList(reclamos, marker) {
             let listContent = '<div class="reclamos-list">';
             listContent += `<h3 class="reclamos-list-title">${reclamos.length} reclamos en esta ubicación</h3>`;
-            
-            reclamos.forEach((reclamo, index) => {
-                const estado = reclamo.estado || 'Sin tratamiento';
-                const color = COLORS[estado];
-                const fechaFormateada = getRelativeTime(reclamo.fecha);
-                
-                listContent += `
-                    <div class="reclamo-item" data-index="${index}">
-                        <div class="reclamo-item-title">${reclamo.tema || 'Sin título'}</div>
-                        ${fechaFormateada ? `<div class="reclamo-item-date">${fechaFormateada}</div>` : ''}
-                        <span class="reclamo-item-badge" style="background: ${color};">${estado}</span>
-                    </div>
-                `;
+            reclamos.forEach((r, i) => {
+                const color = COLORS[r.estado || 'Sin tratamiento'];
+                const fecha = getRelativeTime(r.fecha);
+                listContent += `<div class="reclamo-item" data-index="${i}"><div class="reclamo-item-title">${r.tema || 'Sin título'}</div>${fecha ? `<div class="reclamo-item-date">${fecha}</div>` : ''}<span class="reclamo-item-badge" style="background:${color};">${r.estado || 'Sin tratamiento'}</span></div>`;
             });
-            
             listContent += '</div>';
-            
-            const infoWindow = new google.maps.InfoWindow({
-                content: listContent,
-                maxWidth: 350
-            });
-            
+            const infoWindow = new google.maps.InfoWindow({ content: listContent, maxWidth: 350 });
             infoWindow.open(map, marker);
             currentInfoWindow = infoWindow;
-            
             google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
-                const items = document.querySelectorAll('.reclamo-item');
-                items.forEach((item) => {
+                document.querySelectorAll('.reclamo-item').forEach(item => {
                     item.addEventListener('click', () => {
-                        const index = parseInt(item.getAttribute('data-index'));
-                        if (currentInfoWindow) {
-                            currentInfoWindow.close();
-                            currentInfoWindow = null;
-                        }
-                        setTimeout(() => {
-                            showReclamoDetail(reclamos[index], marker);
-                        }, 100);
+                        const idx = parseInt(item.getAttribute('data-index'));
+                        if (currentInfoWindow) { currentInfoWindow.close(); currentInfoWindow = null; }
+                        setTimeout(() => showReclamoDetail(reclamos[idx], marker), 100);
                     });
                 });
             });
@@ -1667,213 +642,76 @@
         function showReclamoDetail(reclamo, marker) {
             const estado = reclamo.estado || 'Sin tratamiento';
             const color = COLORS[estado];
-            
             const mapsLink = `https://www.google.com/maps?q=${reclamo.lat},${reclamo.lng}`;
-            const whatsappMessage = `*Reclamo: ${reclamo.tema || 'Sin título'}*%0A%0A` +
-                `*Dirección:* ${reclamo.direccion}%0A` +
-                `*Descripción:* ${reclamo.descripcion || 'Sin descripción'}%0A` +
-                `*Estado:* ${estado}%0A%0A` +
-                `Ver en mapa: ${mapsLink}`;
-            
-            const reclamoData = {
-                id: reclamo.id,
-                nombre: reclamo.nombre,
-                telefono: reclamo.telefono,
-                tema: reclamo.tema,
-                descripcion: reclamo.descripcion,
-                direccion: reclamo.direccion,
-                fecha: reclamo.fecha,
-                estado: reclamo.estado,
-                numeroReclamo: reclamo.numeroReclamo,
-                mensajeEnviado: reclamo.mensajeEnviado,
-                whatsappMessage: whatsappMessage
-            };
-            
+            const whatsappMessage = `*Reclamo: ${reclamo.tema || 'Sin título'}*%0A%0A*Dirección:* ${reclamo.direccion}%0A*Descripción:* ${reclamo.descripcion || 'Sin descripción'}%0A*Estado:* ${estado}%0A%0AVer en mapa: ${mapsLink}`;
+            const reclamoData = { id: reclamo.id, nombre: reclamo.nombre, telefono: reclamo.telefono, tema: reclamo.tema, descripcion: reclamo.descripcion, direccion: reclamo.direccion, fecha: reclamo.fecha, estado: reclamo.estado, numeroReclamo: reclamo.numeroReclamo, mensajeEnviado: reclamo.mensajeEnviado, whatsappMessage };
             let infoContent = '<div class="infowindow-container">';
-            
-            if (reclamo.foto) {
-                infoContent += `<img src="${reclamo.foto}" class="infowindow-image" alt="Foto del reclamo" onerror="this.style.display='none'">`;
-            }
-            
+            if (reclamo.foto) infoContent += `<img src="${reclamo.foto}" class="infowindow-image" alt="Foto del reclamo" onerror="this.style.display='none'">`;
             infoContent += '<div class="infowindow-content">';
             infoContent += `<h3 class="infowindow-title">${reclamo.tema || 'Sin título'}</h3>`;
-            
-            if (reclamo.fecha) {
-                const fechaFormateada = getRelativeTime(reclamo.fecha);
-                if (fechaFormateada) {
-                    infoContent += `<p class="infowindow-date">${fechaFormateada}</p>`;
-                }
-            }
-            
+            const fechaF = getRelativeTime(reclamo.fecha);
+            if (fechaF) infoContent += `<p class="infowindow-date">${fechaF}</p>`;
             infoContent += `<p class="infowindow-field"><strong>Reportado por:</strong> ${reclamo.nombre || 'Anónimo'}</p>`;
             infoContent += `<p class="infowindow-field"><strong>Dirección:</strong> ${reclamo.direccion}</p>`;
             infoContent += `<p class="infowindow-field"><strong>Descripción:</strong> ${reclamo.descripcion || 'Sin descripción'}</p>`;
-            
             infoContent += `
-                <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
-                    <select class="estado-selector" id="estado-selector-${reclamo.id}" style="background-color: ${color}; color: white; flex: 1;" 
-                            onchange="cambiarEstado('${reclamo.id}', this.value)">
-                        <option value="Sin tratamiento" ${estado === 'Sin tratamiento' ? 'selected' : ''}>Sin tratamiento</option>
-                        <option value="En proceso" ${estado === 'En proceso' ? 'selected' : ''}>En proceso</option>
-                        <option value="Resuelto" ${estado === 'Resuelto' ? 'selected' : ''}>Resuelto</option>
+                <div style="display:flex;align-items:center;gap:10px;margin-top:5px;">
+                    <select class="estado-selector" id="estado-selector-${reclamo.id}" style="background-color:${color};color:white;flex:1;" onchange="cambiarEstado('${reclamo.id}', this.value)">
+                        <option value="Sin tratamiento" ${estado==='Sin tratamiento'?'selected':''}>Sin tratamiento</option>
+                        <option value="En proceso" ${estado==='En proceso'?'selected':''}>En proceso</option>
+                        <option value="Resuelto" ${estado==='Resuelto'?'selected':''}>Resuelto</option>
                     </select>
-                    <a href="#" onclick='event.preventDefault(); openShareModal(${JSON.stringify(reclamoData).replace(/'/g, "&apos;")}); return false;' 
-                       style="display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #30115e; border: none; flex-shrink: 0;"
-                       title="Compartir WhatsApp">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; fill: white;">
-                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                        </svg>
+                    <a href="#" onclick='event.preventDefault();openShareModal(${JSON.stringify(reclamoData).replace(/'/g,"&apos;")});return false;' style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#30115e;border:none;flex-shrink:0;" title="Compartir WhatsApp">
+                        <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:white;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
                     </a>
-                    <a href="#" onclick='event.preventDefault(); exportarPDF(${JSON.stringify(reclamoData).replace(/'/g, "&apos;")}); return false;' 
-                       style="display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #30115e; border: none; flex-shrink: 0;"
-                       title="Exportar PDF">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; fill: white;">
-                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18.5,9L13,3.5L13,9H18.5M6,20V4H11V10H18V20H6Z"/>
-                        </svg>
+                    <a href="#" onclick='event.preventDefault();exportarPDF(${JSON.stringify(reclamoData).replace(/'/g,"&apos;")});return false;' style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#30115e;border:none;flex-shrink:0;" title="Exportar PDF">
+                        <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:white;"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18.5,9L13,3.5L13,9H18.5M6,20V4H11V10H18V20H6Z"/></svg>
                     </a>
-                </div>
-            `;
-            
+                </div>`;
             infoContent += '</div></div>';
-            
-            const infoWindow = new google.maps.InfoWindow({
-                content: infoContent,
-                maxWidth: 350,
-                disableAutoPan: false
-            });
-            
+            const infoWindow = new google.maps.InfoWindow({ content: infoContent, maxWidth: 350, disableAutoPan: false });
             infoWindow.open(map, marker);
             currentInfoWindow = infoWindow;
         }
         
         async function exportarPDF(reclamoData) {
             try {
-                if (currentInfoWindow) {
-                    currentInfoWindow.close();
-                }
-                
-                await new Promise(resolve => setTimeout(resolve, 300));
-                
-                const mapElement = document.getElementById('map');
-                const canvas = await html2canvas(mapElement, {
-                    useCORS: true,
-                    allowTaint: true,
-                    backgroundColor: '#ffffff',
-                    scale: 2
-                });
-                
+                if (currentInfoWindow) currentInfoWindow.close();
+                await new Promise(r => setTimeout(r, 300));
+                const canvas = await html2canvas(document.getElementById('map'), { useCORS: true, allowTaint: true, backgroundColor: '#ffffff', scale: 2 });
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF('p', 'mm', 'a4');
-                
-                const pdfWidth = 210;
-                const pdfHeight = 297;
-                
-                pdf.setFontSize(18);
-                pdf.setTextColor(48, 17, 94);
+                const pdfWidth = 210, pdfHeight = 297;
+                pdf.setFontSize(18); pdf.setTextColor(48, 17, 94);
                 pdf.text('Reclamo Vecinal - San Isidro', 105, 20, { align: 'center' });
-                
                 const imgData = canvas.toDataURL('image/png');
-                const imgWidth = pdfWidth - 20;
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                const maxImgHeight = 120;
-                const finalImgHeight = Math.min(imgHeight, maxImgHeight);
-                const finalImgWidth = (canvas.width * finalImgHeight) / canvas.height;
-                
-                pdf.addImage(imgData, 'PNG', (pdfWidth - finalImgWidth) / 2, 30, finalImgWidth, finalImgHeight);
-                
-                let yPos = 30 + finalImgHeight + 15;
-                
-                pdf.setFontSize(14);
-                pdf.setTextColor(0, 0, 0);
-                pdf.setFont(undefined, 'bold');
-                pdf.text('Detalles del Reclamo', 10, yPos);
-                
-                yPos += 10;
-                pdf.setFontSize(11);
-                pdf.setFont(undefined, 'normal');
-                
-                if (reclamoData.id) {
-                    pdf.setFont(undefined, 'bold');
-                    pdf.text('ID:', 10, yPos);
-                    pdf.setFont(undefined, 'normal');
-                    pdf.text(reclamoData.id.toString(), 30, yPos);
-                    yPos += 7;
-                }
-                
-                if (reclamoData.numeroReclamo) {
-                    pdf.setFont(undefined, 'bold');
-                    pdf.text('N° Reclamo Municipal:', 10, yPos);
-                    pdf.setFont(undefined, 'normal');
-                    pdf.text(reclamoData.numeroReclamo.toString(), 60, yPos);
-                    yPos += 7;
-                }
-                
-                pdf.setFont(undefined, 'bold');
-                pdf.text('Tema:', 10, yPos);
-                pdf.setFont(undefined, 'normal');
-                const temaLines = pdf.splitTextToSize(reclamoData.tema || 'Sin tema', pdfWidth - 40);
-                pdf.text(temaLines, 30, yPos);
-                yPos += 7 * temaLines.length;
-                
-                pdf.setFont(undefined, 'bold');
-                pdf.text('Estado:', 10, yPos);
-                pdf.setFont(undefined, 'normal');
-                const estadoColor = COLORS[reclamoData.estado];
-                pdf.setTextColor(estadoColor.includes('ef4444') ? 239 : estadoColor.includes('f97316') ? 249 : 34,
-                                 estadoColor.includes('ef4444') ? 68 : estadoColor.includes('f97316') ? 115 : 197,
-                                 estadoColor.includes('ef4444') ? 68 : estadoColor.includes('f97316') ? 22 : 94);
-                pdf.text(reclamoData.estado || 'Sin tratamiento', 30, yPos);
-                pdf.setTextColor(0, 0, 0);
-                yPos += 7;
-                
-                pdf.setFont(undefined, 'bold');
-                pdf.text('Descripción:', 10, yPos);
-                yPos += 5;
-                pdf.setFont(undefined, 'normal');
-                const descLines = pdf.splitTextToSize(reclamoData.descripcion || 'Sin descripción', pdfWidth - 20);
-                pdf.text(descLines, 10, yPos);
-                yPos += 7 * descLines.length;
-                
-                pdf.setFont(undefined, 'bold');
-                pdf.text('Dirección:', 10, yPos);
-                yPos += 5;
-                pdf.setFont(undefined, 'normal');
-                const dirLimpia = reclamoData.direccion.replace(', San Isidro, Buenos Aires, Argentina', ', San Isidro');
-                const dirLines = pdf.splitTextToSize(dirLimpia, pdfWidth - 20);
-                pdf.text(dirLines, 10, yPos);
-                yPos += 7 * dirLines.length;
-                
-                if (reclamoData.nombre) {
-                    pdf.setFont(undefined, 'bold');
-                    pdf.text('Reportado por:', 10, yPos);
-                    pdf.setFont(undefined, 'normal');
-                    pdf.text(reclamoData.nombre, 45, yPos);
-                    yPos += 7;
-                }
-                
-                if (reclamoData.fecha) {
-                    const fechaFormateada = getRelativeTime(reclamoData.fecha);
-                    if (fechaFormateada) {
-                        pdf.setFont(undefined, 'bold');
-                        pdf.text('Fecha:', 10, yPos);
-                        pdf.setFont(undefined, 'normal');
-                        pdf.text(fechaFormateada, 30, yPos);
-                        yPos += 7;
-                    }
-                }
-                
-                pdf.setFontSize(10);
-                pdf.setTextColor(100, 100, 100);
+                const imgW = pdfWidth - 20;
+                const imgH = (canvas.height * imgW) / canvas.width;
+                const finalH = Math.min(imgH, 120);
+                const finalW = (canvas.width * finalH) / canvas.height;
+                pdf.addImage(imgData, 'PNG', (pdfWidth - finalW) / 2, 30, finalW, finalH);
+                let y = 30 + finalH + 15;
+                pdf.setFontSize(14); pdf.setTextColor(0,0,0); pdf.setFont(undefined,'bold'); pdf.text('Detalles del Reclamo', 10, y); y += 10;
+                pdf.setFontSize(11); pdf.setFont(undefined,'normal');
+                if (reclamoData.id) { pdf.setFont(undefined,'bold'); pdf.text('ID:', 10, y); pdf.setFont(undefined,'normal'); pdf.text(reclamoData.id.toString(), 30, y); y += 7; }
+                if (reclamoData.numeroReclamo) { pdf.setFont(undefined,'bold'); pdf.text('N° Reclamo Municipal:', 10, y); pdf.setFont(undefined,'normal'); pdf.text(reclamoData.numeroReclamo.toString(), 60, y); y += 7; }
+                pdf.setFont(undefined,'bold'); pdf.text('Tema:', 10, y); pdf.setFont(undefined,'normal');
+                const temaLines = pdf.splitTextToSize(reclamoData.tema || 'Sin tema', pdfWidth - 40); pdf.text(temaLines, 30, y); y += 7 * temaLines.length;
+                pdf.setFont(undefined,'bold'); pdf.text('Estado:', 10, y); pdf.setFont(undefined,'normal');
+                const ec = reclamoData.estado; pdf.setTextColor(ec==='Sin tratamiento'?239:ec==='En proceso'?249:34, ec==='Sin tratamiento'?68:ec==='En proceso'?115:197, ec==='Sin tratamiento'?68:ec==='En proceso'?22:94);
+                pdf.text(reclamoData.estado || 'Sin tratamiento', 30, y); pdf.setTextColor(0,0,0); y += 7;
+                pdf.setFont(undefined,'bold'); pdf.text('Descripción:', 10, y); y += 5; pdf.setFont(undefined,'normal');
+                const descLines = pdf.splitTextToSize(reclamoData.descripcion || 'Sin descripción', pdfWidth - 20); pdf.text(descLines, 10, y); y += 7 * descLines.length;
+                pdf.setFont(undefined,'bold'); pdf.text('Dirección:', 10, y); y += 5; pdf.setFont(undefined,'normal');
+                const dirLines = pdf.splitTextToSize(reclamoData.direccion.replace(', San Isidro, Buenos Aires, Argentina', ', San Isidro'), pdfWidth - 20); pdf.text(dirLines, 10, y); y += 7 * dirLines.length;
+                if (reclamoData.nombre) { pdf.setFont(undefined,'bold'); pdf.text('Reportado por:', 10, y); pdf.setFont(undefined,'normal'); pdf.text(reclamoData.nombre, 45, y); y += 7; }
+                const fechaF = getRelativeTime(reclamoData.fecha);
+                if (fechaF) { pdf.setFont(undefined,'bold'); pdf.text('Fecha:', 10, y); pdf.setFont(undefined,'normal'); pdf.text(fechaF, 30, y); }
+                pdf.setFontSize(10); pdf.setTextColor(100,100,100);
                 pdf.text('La Libertad Avanza - San Isidro', 105, pdfHeight - 10, { align: 'center' });
                 pdf.text(new Date().toLocaleDateString('es-AR'), 105, pdfHeight - 5, { align: 'center' });
-                
-                const nombreArchivo = `Reclamo_${reclamoData.id}_${reclamoData.tema.substring(0, 30).replace(/[^a-z0-9áéíóú\s]/gi, '_')}.pdf`;
-                pdf.save(nombreArchivo);
-                
-            } catch (error) {
-                console.error('❌ Error al generar PDF:', error);
-                alert('Error al generar el PDF. Por favor intente nuevamente.');
-            }
+                pdf.save(`Reclamo_${reclamoData.id}_${reclamoData.tema.substring(0,30).replace(/[^a-z0-9áéíóú\s]/gi,'_')}.pdf`);
+            } catch(error) { console.error('Error al generar PDF:', error); alert('Error al generar el PDF.'); }
         }
         
         let currentReclamoData = null;
@@ -1883,181 +721,93 @@
             document.getElementById('share-modal').classList.add('active');
             document.getElementById('share-numero-container').classList.remove('active');
             document.getElementById('share-numero-input').value = '';
-            
             if (reclamoData.mensajeEnviado && reclamoData.mensajeEnviado.toLowerCase() === 'sí') {
                 document.getElementById('share-warning').classList.add('active');
-            } else {
-                document.getElementById('share-warning').classList.remove('active');
-            }
+            } else { document.getElementById('share-warning').classList.remove('active'); }
         }
         
-        document.getElementById('close-share-modal').addEventListener('click', () => {
-            document.getElementById('share-modal').classList.remove('active');
-            currentReclamoData = null;
-        });
-        
-        document.getElementById('share-modal').addEventListener('click', (e) => {
-            if (e.target.id === 'share-modal') {
-                document.getElementById('share-modal').classList.remove('active');
-                currentReclamoData = null;
-            }
-        });
-        
+        document.getElementById('close-share-modal').addEventListener('click', () => { document.getElementById('share-modal').classList.remove('active'); currentReclamoData = null; });
+        document.getElementById('share-modal').addEventListener('click', (e) => { if (e.target.id === 'share-modal') { document.getElementById('share-modal').classList.remove('active'); currentReclamoData = null; } });
         document.getElementById('share-interno').addEventListener('click', () => {
             if (!currentReclamoData) return;
-            const whatsappUrl = `https://wa.me/?text=${currentReclamoData.whatsappMessage}`;
-            window.open(whatsappUrl, '_blank');
+            window.open(`https://wa.me/?text=${currentReclamoData.whatsappMessage}`, '_blank');
             document.getElementById('share-modal').classList.remove('active');
         });
-        
         document.getElementById('share-vecino').addEventListener('click', () => {
             if (!currentReclamoData) return;
-            if (currentReclamoData.numeroReclamo && currentReclamoData.numeroReclamo.trim() !== '') {
-                enviarMensajeVecino(currentReclamoData.numeroReclamo);
-            } else {
-                document.getElementById('share-numero-container').classList.add('active');
-            }
+            if (currentReclamoData.numeroReclamo && currentReclamoData.numeroReclamo.trim() !== '') enviarMensajeVecino(currentReclamoData.numeroReclamo);
+            else document.getElementById('share-numero-container').classList.add('active');
         });
-        
-        document.getElementById('share-numero-cancel').addEventListener('click', () => {
-            document.getElementById('share-numero-container').classList.remove('active');
-            document.getElementById('share-numero-input').value = '';
-        });
-        
+        document.getElementById('share-numero-cancel').addEventListener('click', () => { document.getElementById('share-numero-container').classList.remove('active'); document.getElementById('share-numero-input').value = ''; });
         document.getElementById('share-numero-save').addEventListener('click', async () => {
-            const numeroReclamo = document.getElementById('share-numero-input').value.trim();
-            if (!numeroReclamo) {
-                alert('Por favor ingrese el número de reclamo');
-                return;
-            }
-            const guardado = await guardarNumeroReclamo(currentReclamoData.id, numeroReclamo);
-            if (guardado) {
-                currentReclamoData.numeroReclamo = numeroReclamo;
-                enviarMensajeVecino(numeroReclamo);
-            } else {
-                alert('Error al guardar el número de reclamo. Intente nuevamente.');
-            }
+            const numero = document.getElementById('share-numero-input').value.trim();
+            if (!numero) { alert('Por favor ingrese el número de reclamo'); return; }
+            if (await guardarNumeroReclamo(currentReclamoData.id, numero)) { currentReclamoData.numeroReclamo = numero; enviarMensajeVecino(numero); }
+            else alert('Error al guardar el número de reclamo.');
         });
         
         function enviarMensajeVecino(numeroReclamo) {
             if (!currentReclamoData) return;
-            
-            const direccionLimpia = currentReclamoData.direccion.replace(', San Isidro, Buenos Aires, Argentina', ', San Isidro');
-            
-            const mensaje = `Hola! Tu reclamo sobre "${currentReclamoData.tema}" ha sido registrado.
-
-*Número de Reclamo:* ${numeroReclamo}
-*Ubicación:* ${direccionLimpia}
-
-Podés hacer el seguimiento de tu reclamo con este número. ¡Gracias por tu participación!
-
-_La Libertad Avanza - San Isidro_`;
-            
-            let telefono = currentReclamoData.telefono.replace(/\D/g, '');
-            
-            if (telefono.length === 10 && telefono.startsWith('0')) {
-                telefono = '54' + telefono.substring(1);
-            } else if (telefono.length === 10) {
-                telefono = '54' + telefono;
-            }
-            
+            const dirLimpia = currentReclamoData.direccion.replace(', San Isidro, Buenos Aires, Argentina', ', San Isidro');
+            const mensaje = `Hola! Tu reclamo sobre "${currentReclamoData.tema}" ha sido registrado.\n\n*Número de Reclamo:* ${numeroReclamo}\n*Ubicación:* ${dirLimpia}\n\nPodés hacer el seguimiento de tu reclamo con este número. ¡Gracias por tu participación!\n\n_La Libertad Avanza - San Isidro_`;
+            let tel = currentReclamoData.telefono.replace(/\D/g, '');
+            if (tel.length === 10 && tel.startsWith('0')) tel = '54' + tel.substring(1);
+            else if (tel.length === 10) tel = '54' + tel;
             document.getElementById('share-modal').classList.remove('active');
-            
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            
             setTimeout(() => {
                 if (isMobile) {
-                    const whatsappUrl = `whatsapp://send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
-                    window.location.href = whatsappUrl;
-                    setTimeout(() => {
-                        const webUrl = `https://api.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
-                        window.open(webUrl, '_blank');
-                    }, 1000);
-                } else {
-                    const whatsappUrl = `https://web.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
-                    window.open(whatsappUrl, '_blank');
-                }
-                
-                setTimeout(() => {
-                    location.reload();
-                }, 2000);
+                    window.location.href = `whatsapp://send?phone=${tel}&text=${encodeURIComponent(mensaje)}`;
+                    setTimeout(() => window.open(`https://api.whatsapp.com/send?phone=${tel}&text=${encodeURIComponent(mensaje)}`, '_blank'), 1000);
+                } else { window.open(`https://web.whatsapp.com/send?phone=${tel}&text=${encodeURIComponent(mensaje)}`, '_blank'); }
+                setTimeout(() => location.reload(), 2000);
             }, 100);
         }
         
         async function guardarNumeroReclamo(id, numeroReclamo) {
             try {
                 await fetch('https://script.google.com/macros/s/AKfycbzAW53ehSqPdkudN5mkyValqSId0xCn7H7NLnvMEpMbkoUeA-0uNBewnuAmruhARzwq/exec', {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: id, numeroReclamo: numeroReclamo })
+                    method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, numeroReclamo })
                 });
                 return true;
-            } catch (error) {
-                console.error('Error al guardar número de reclamo:', error);
-                return false;
-            }
+            } catch(e) { return false; }
         }
         
         function cambiarEstado(id, nuevoEstado) {
-            const selector = document.getElementById(`estado-selector-${id}`);
-            if (selector) {
-                const color = COLORS[nuevoEstado];
-                selector.style.backgroundColor = color;
-            }
+            const sel = document.getElementById(`estado-selector-${id}`);
+            if (sel) sel.style.backgroundColor = COLORS[nuevoEstado];
             actualizarEstado(id, nuevoEstado);
         }
         
         async function actualizarEstado(id, nuevoEstado) {
             try {
                 await fetch('https://script.google.com/macros/s/AKfycbzAW53ehSqPdkudN5mkyValqSId0xCn7H7NLnvMEpMbkoUeA-0uNBewnuAmruhARzwq/exec', {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'updateEstado', id: id, estado: nuevoEstado })
+                    method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'updateEstado', id, estado: nuevoEstado })
                 });
-                
                 const reclamo = reclamosData.find(r => r.id === id);
                 if (reclamo) {
-                    const estadoAnterior = reclamo.estado;
+                    stateCounts[reclamo.estado] = (stateCounts[reclamo.estado] || 1) - 1;
                     reclamo.estado = nuevoEstado;
-                    
-                    stateCounts[estadoAnterior] = (stateCounts[estadoAnterior] || 1) - 1;
                     stateCounts[nuevoEstado] = (stateCounts[nuevoEstado] || 0) + 1;
                     updateCounters();
-                    
-                    markers.forEach(item => {
-                        if (item && item.marker && typeof item.marker.setMap === 'function') {
-                            item.marker.setMap(null);
-                        }
-                    });
+                    markers.forEach(m => { if (m && m.marker) m.marker.setMap(null); });
                     markers = [];
-                    
                     const locationGroups = {};
                     reclamosData.forEach(item => {
                         const key = getLocationKey(item.lat, item.lng);
                         if (!locationGroups[key]) locationGroups[key] = [];
                         locationGroups[key].push(item);
                     });
-                    
-                    Object.values(locationGroups).forEach(group => {
-                        createMarkerForGroup(group);
-                    });
+                    Object.values(locationGroups).forEach(group => createMarkerForGroup(group));
                 }
-                
-                return true;
-            } catch (error) {
-                console.error('Error al actualizar estado:', error);
-                return false;
-            }
+            } catch(e) { console.error('Error al actualizar estado:', e); }
         }
     </script>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAScgyJY28HxUI0kIlX3j3yzpWOQslh_h4&callback=initMap">
-    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAScgyJY28HxUI0kIlX3j3yzpWOQslh_h4&callback=initMap"></script>
 </body>
 </html>
