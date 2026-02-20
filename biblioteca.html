@@ -1130,8 +1130,7 @@ function bindEvents() {
     document.getElementById('filter-estado').addEventListener('change', renderList);
     document.getElementById('filter-comision').addEventListener('change', renderList);
 
-    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-    zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag-over'); handleFile(e.dataTransfer.files[0]); });
+
 }
 
 // ════════════════════════════════════════
