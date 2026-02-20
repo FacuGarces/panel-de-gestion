@@ -91,7 +91,7 @@
             border: 2px solid var(--gray-200); border-radius: 8px; padding: 8px 14px;
             font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 500;
             color: var(--gray-800); background: var(--gray-50); cursor: pointer; outline: none; transition: border-color 0.2s;
-            max-width: 220px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;
+            max-width: 180px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;
         }
         .filter-select:focus { border-color: var(--purple); }
 
@@ -139,6 +139,7 @@
         .stat-card.s-Aprobado   { border-top-color: #22c55e; }
         .stat-card.s-Rechazado  { border-top-color: #ef4444; }
         .stat-card.s-Archivado  { border-top-color: #9ca3af; }
+        .stat-card.s-Listo      { border-top-color: #059669; }
 
         .stat-label { font-size: 10px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
         .stat-value { font-size: 22px; font-weight: 800; color: var(--purple); line-height: 1; }
@@ -229,6 +230,7 @@
         .estado-Aprobado   { background: #dcfce7; color: #15803d; }
         .estado-Rechazado  { background: #fee2e2; color: #b91c1c; }
         .estado-Archivado  { background: #f3f4f6; color: #6b7280; }
+        .estado-Listo      { background: #d1fae5; color: #065f46; }
 
         .border-Presentado { border-left-color: #0369a1; }
         .border-EnRevision { border-left-color: #eab308; }
@@ -236,6 +238,7 @@
         .border-Aprobado   { border-left-color: #22c55e; }
         .border-Rechazado  { border-left-color: #ef4444; }
         .border-Archivado  { border-left-color: #9ca3af; }
+        .border-Listo      { border-left-color: #059669; }
 
         /* ─── MODAL ─── */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
@@ -417,6 +420,7 @@
                 <option value="Aprobado">Aprobado</option>
                 <option value="Rechazado">Rechazado</option>
                 <option value="Archivado">Archivado</option>
+                <option value="Listo">Listo</option>
             </select>
             <select class="filter-select" id="filter-comision">
                 <option value="">Todas las comisiones</option>
@@ -461,6 +465,7 @@
                             <option value="Aprobado">Aprobado</option>
                             <option value="Rechazado">Rechazado</option>
                             <option value="Archivado">Archivado</option>
+                            <option value="Listo">Listo</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -515,7 +520,7 @@
                                         <div style="flex:1;height:1px;background:var(--gray-200);"></div>
                                     </div>
                                     <input type="url" id="doc-link-input" placeholder="Pegá el link de Google Docs..."
-                                        class="form-input"
+                                        class="form-input" style="font-size:13px;"
                                         oninput="onDocLinkInput(this.value)"
                                         onfocus="this.style.borderColor='var(--gdoc-blue)'"
                                         onblur="this.style.borderColor='var(--gray-200)'">
@@ -597,7 +602,8 @@ const ESTADOS = {
     'EnComision': { label: 'En Comisión', cls: 'estado-EnComision', border: 'border-EnComision' },
     'Aprobado':   { label: 'Aprobado',    cls: 'estado-Aprobado',   border: 'border-Aprobado'   },
     'Rechazado':  { label: 'Rechazado',   cls: 'estado-Rechazado',  border: 'border-Rechazado'  },
-    'Archivado':  { label: 'Archivado',   cls: 'estado-Archivado',  border: 'border-Archivado'  }
+    'Archivado':  { label: 'Archivado',   cls: 'estado-Archivado',  border: 'border-Archivado'  },
+    'Listo':      { label: 'Listo',       cls: 'estado-Listo',     border: 'border-Listo'     }
 };
 
 // ════════════════════════════════════════
@@ -1135,7 +1141,7 @@ function bindEvents() {
 // TOGGLE FECHA
 // ════════════════════════════════════════
 function toggleFecha(estado) {
-    const noPresenta = ['EnRevision', 'Archivado', ''];
+    const noPresenta = ['EnRevision', 'Archivado', 'Listo', ''];
     const fechaGroup = document.getElementById('fecha-group');
     const expGroup   = document.getElementById('expediente-group');
     if (noPresenta.includes(estado)) {
