@@ -261,7 +261,7 @@
 
         /* ─── FORM ─── */
         .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
         .form-group.full { grid-column: 1 / -1; }
         .form-label { font-size: 12px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.5px; }
 
@@ -269,6 +269,7 @@
             border: 2px solid var(--gray-200); border-radius: 8px; padding: 10px 14px;
             font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 500;
             color: var(--gray-800); background: var(--gray-50); transition: border-color 0.2s; outline: none;
+            width: 100%; text-overflow: ellipsis; overflow: hidden;
         }
         .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--purple); background: white; }
         .form-textarea { resize: vertical; min-height: 80px; }
