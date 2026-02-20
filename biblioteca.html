@@ -558,6 +558,30 @@
                                         Volver a abrir →
                                     </a>
                                 </div>
+                                <!-- Separador: vincular doc existente -->
+                                <div id="doc-link-section" style="margin-top:16px;">
+                                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                                        <div style="flex:1;height:1px;background:var(--gray-200);"></div>
+                                        <span style="font-size:11px;font-weight:600;color:var(--gray-400);white-space:nowrap;">O vinculá uno existente</span>
+                                        <div style="flex:1;height:1px;background:var(--gray-200);"></div>
+                                    </div>
+                                    <input type="url" id="doc-link-input" placeholder="Pegá el link de Google Docs..."
+                                        style="width:100%;padding:10px 12px;border:2px solid var(--gray-200);border-radius:8px;
+                                               font-family:'Montserrat',sans-serif;font-size:13px;color:var(--gray-700);
+                                               outline:none;transition:border-color 0.2s;"
+                                        oninput="onDocLinkInput(this.value)"
+                                        onfocus="this.style.borderColor='var(--gdoc-blue)'"
+                                        onblur="this.style.borderColor='var(--gray-200)'">
+                                    <div id="doc-link-error" style="display:none;margin-top:6px;font-size:12px;color:#ef4444;font-weight:600;">
+                                        ⚠️ El link debe ser de Google Docs (docs.google.com/document/...)
+                                    </div>
+                                    <div id="doc-link-disclaimer" style="display:none;margin-top:8px;padding:10px 12px;
+                                        background:#fffbeb;border:1px solid #fde68a;border-radius:8px;
+                                        font-size:12px;color:#92400e;line-height:1.5;">
+                                        ⚠️ <strong>Acordate de compartir el documento</strong> con toda la nómina del Bloque antes de guardarlo, para que todos puedan acceder.
+                                    </div>
+                                </div>
+
                                 <!-- Modo edición: ya tiene doc guardado → mostrar "Seguir editando" -->
                                 <div id="doc-existing-section" style="display:none; margin-top:10px; text-align:center;">
                                     <a id="btn-seguir-editando" href="" target="_blank" class="btn-create-doc" style="display:inline-flex;">
@@ -753,12 +777,47 @@ function switchUploadTab(tab) {
 // ════════════════════════════════════════
 // CREAR GOOGLE DOC
 // ════════════════════════════════════════
+function onDocLinkInput(value) {
+    const errorDiv  = document.getElementById('doc-link-error');
+    const disclaimer = document.getElementById('doc-link-disclaimer');
+    const val = value.trim();
+
+    if (!val) {
+        // Campo vacío — resetear
+        errorDiv.style.display = 'none';
+        disclaimer.style.display = 'none';
+        // Solo limpiar pendingDocUrl si no vino de crear doc
+        if (!document.getElementById('doc-url-preview').style.display || document.getElementById('doc-url-preview').style.display === 'none') {
+            pendingDocUrl = null;
+        }
+        return;
+    }
+
+    // Validar que sea un Google Doc
+    const isGoogleDoc = /https:\/\/docs\.google\.com\/document\/d\//.test(val);
+    if (!isGoogleDoc) {
+        errorDiv.style.display = 'block';
+        disclaimer.style.display = 'none';
+        pendingDocUrl = null;
+        return;
+    }
+
+    // Link válido
+    errorDiv.style.display = 'none';
+    disclaimer.style.display = 'block';
+    pendingDocUrl = val;
+}
+
 function mostrarFormCrearDoc() {
-    // Ocultar "seguir editando", mostrar botón de crear
+    // Resetear todo el estado del tab de docs → empty state
     document.getElementById('doc-existing-section').style.display = 'none';
-    document.getElementById('btn-create-doc').style.display = '';
+    document.getElementById('doc-url-preview').style.display = 'none';
     document.getElementById('doc-create-zone').classList.remove('has-doc');
-    // Al crear uno nuevo, el docUrl pendiente se actualizará con el nuevo
+    document.getElementById('btn-create-doc').style.display = '';
+    document.getElementById('doc-link-input').value = '';
+    document.getElementById('doc-link-error').style.display = 'none';
+    document.getElementById('doc-link-disclaimer').style.display = 'none';
+    pendingDocUrl = null;
 }
 
 async function crearGoogleDoc() {
@@ -1132,6 +1191,9 @@ function closeFormModal() {
     document.getElementById('doc-create-zone').classList.remove('has-doc');
     document.getElementById('doc-url-link').href = '';
     document.getElementById('btn-create-doc').style.display = '';
+    document.getElementById('doc-link-input').value = '';
+    document.getElementById('doc-link-error').style.display = 'none';
+    document.getElementById('doc-link-disclaimer').style.display = 'none';
     switchUploadTab('pdf');
     editingId    = null;
     pendingFile  = null;
