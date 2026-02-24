@@ -240,6 +240,16 @@
         .border-Archivado  { border-left-color: #9ca3af; }
         .border-Listo      { border-left-color: #059669; }
 
+        /* ─── TIPO BADGE ─── */
+        .tipo-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 100px;
+            text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0;
+        }
+        .tipo-Ordenanza    { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+        .tipo-Comunicacion { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+        .tipo-Resolucion   { background: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+
         /* ─── MODAL ─── */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
@@ -275,8 +285,6 @@
         .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--purple); background: white; }
         .form-textarea { resize: vertical; min-height: 80px; }
 
-        /* ─── UPLOAD TABS ─── */
-
         /* ─── GOOGLE DOCS ZONE ─── */
         .doc-create-zone {
             border: 2px dashed var(--gray-200); border-radius: 8px; padding: 28px;
@@ -307,14 +315,6 @@
         }
         .doc-url-preview a:hover { text-decoration: underline; }
 
-        .doc-existing-info {
-            display: none; margin-top: 10px; padding: 10px 14px;
-            background: #e8f0fe; border-radius: 8px; border: 1px solid #bee3f8;
-            font-size: 12px; color: #1558a0; font-weight: 600;
-        }
-        .doc-existing-info a { color: var(--gdoc-blue); text-decoration: none; }
-        .doc-existing-info a:hover { text-decoration: underline; }
-
         /* ─── MODAL FOOTER ─── */
         .modal-footer { padding: 16px 24px; border-top: 1px solid var(--gray-200); display: flex; justify-content: flex-end; gap: 10px; }
 
@@ -324,9 +324,6 @@
         .btn-save { background: var(--purple); color: white; }
         .btn-save:hover { background: var(--purple-light); }
         .btn-save:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-        /* ─── PREVIEW ─── */
-
 
         .form-modal .modal { max-width: 580px; }
         .form-modal .modal-body { max-height: calc(90vh - 130px); overflow-y: auto; }
@@ -401,7 +398,6 @@
                 <p>Seguimiento de proyectos legislativos</p>
             </div>
         </div>
-        <!-- Avatar de usuario -->
         <div id="header-user" style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
             <span id="header-user-name" style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.6);"></span>
             <div id="header-avatar-wrap"></div>
@@ -424,6 +420,13 @@
                 <option value="EnRevision">En Revisión</option>
                 <option value="Rechazado">Rechazado</option>
                 <option value="Archivado">Archivado</option>
+            </select>
+            <!-- NUEVO: filtro por tipo -->
+            <select class="filter-select" id="filter-tipo">
+                <option value="">Todos los tipos</option>
+                <option value="Ordenanza">Ordenanza</option>
+                <option value="Comunicacion">Comunicación</option>
+                <option value="Resolucion">Resolución</option>
             </select>
             <select class="filter-select" id="filter-comision">
                 <option value="">Todas las comisiones</option>
@@ -471,6 +474,16 @@
                             <option value="Archivado">Archivado</option>
                         </select>
                     </div>
+                    <!-- NUEVO: tipo de proyecto -->
+                    <div class="form-group">
+                        <label class="form-label">Tipo de proyecto *</label>
+                        <select class="form-select" id="f-tipo">
+                            <option value="" disabled selected>Seleccionar tipo...</option>
+                            <option value="Ordenanza">Ordenanza</option>
+                            <option value="Comunicacion">Comunicación</option>
+                            <option value="Resolucion">Resolución</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label class="form-label">Comisión *</label>
                         <select class="form-select" id="f-comision"></select>
@@ -506,7 +519,7 @@
                                     <svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
                                     Crear documento
                                 </button>
-                                <!-- Preview link después de crear (modo nuevo) -->
+                                <!-- Preview link después de crear -->
                                 <div class="doc-url-preview" id="doc-url-preview">
                                     ✅ Documento creado y abierto en una nueva pestaña.
                                     <br>
@@ -537,7 +550,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Modo edición: ya tiene doc guardado → mostrar "Seguir editando" -->
+                                <!-- Modo edición: ya tiene doc guardado -->
                                 <div id="doc-existing-section" style="display:none; margin-top:10px; text-align:center;">
                                     <a id="btn-seguir-editando" href="" target="_blank" class="btn-create-doc" style="display:inline-flex;">
                                         <svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
@@ -560,8 +573,6 @@
             </div>
         </div>
     </div>
-
-
 
     <!-- MODAL: CONFIRMAR ELIMINACIÓN -->
     <div class="modal-overlay" id="confirm-modal">
@@ -609,13 +620,19 @@ const ESTADOS = {
     'Archivado':  { label: 'Archivado',   cls: 'estado-Archivado',  border: 'border-Archivado'  }
 };
 
+const TIPOS = {
+    'Ordenanza':    { label: 'Ordenanza',    cls: 'tipo-Ordenanza'    },
+    'Comunicacion': { label: 'Comunicación', cls: 'tipo-Comunicacion' },
+    'Resolucion':   { label: 'Resolución',   cls: 'tipo-Resolucion'   }
+};
+
 // ════════════════════════════════════════
 // ESTADO APP
 // ════════════════════════════════════════
-let proyectos    = [];
-let editingId    = null;
-let deleteId     = null;
-let pendingDocUrl = null;   // ← nuevo: URL del Google Doc pendiente
+let proyectos     = [];
+let editingId     = null;
+let deleteId      = null;
+let pendingDocUrl = null;
 
 // ════════════════════════════════════════
 // INIT
@@ -642,6 +659,14 @@ function loadUserSession() {
             wrap.innerHTML = `<div style="width:34px;height:34px;border-radius:50%;background:rgba(167,139,250,0.3);border:2px solid rgba(167,139,250,0.6);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:white;cursor:pointer;" title="${user.name}" onclick="window.location='index.html'">${inicial}</div>`;
         }
     } catch(e) {}
+}
+
+// Devuelve el nombre del usuario logueado para guardar en creadoPor
+function getCurrentUserName() {
+    try {
+        const user = JSON.parse(sessionStorage.getItem('lla_user') || '{}');
+        return user.name || user.given_name || '';
+    } catch(e) { return ''; }
 }
 
 function poblarSelectsComisiones() {
@@ -696,28 +721,22 @@ async function apiPost(params) {
 }
 
 // ════════════════════════════════════════
-// TABS UPLOAD
-// ════════════════════════════════════════
-// ════════════════════════════════════════
 // CREAR GOOGLE DOC
 // ════════════════════════════════════════
 function onDocLinkInput(value) {
-    const errorDiv  = document.getElementById('doc-link-error');
+    const errorDiv   = document.getElementById('doc-link-error');
     const disclaimer = document.getElementById('doc-link-disclaimer');
     const val = value.trim();
 
     if (!val) {
-        // Campo vacío — resetear
         errorDiv.style.display = 'none';
         disclaimer.style.display = 'none';
-        // Solo limpiar pendingDocUrl si no vino de crear doc
         if (!document.getElementById('doc-url-preview').style.display || document.getElementById('doc-url-preview').style.display === 'none') {
             pendingDocUrl = null;
         }
         return;
     }
 
-    // Validar que sea un Google Doc
     const isGoogleDoc = /https:\/\/docs\.google\.com\/document\/d\//.test(val);
     if (!isGoogleDoc) {
         errorDiv.style.display = 'block';
@@ -726,14 +745,12 @@ function onDocLinkInput(value) {
         return;
     }
 
-    // Link válido
     errorDiv.style.display = 'none';
     disclaimer.style.display = 'block';
     pendingDocUrl = val;
 }
 
 function mostrarFormCrearDoc() {
-    // Resetear todo el estado del tab de docs → empty state
     document.getElementById('doc-existing-section').style.display = 'none';
     document.getElementById('doc-url-preview').style.display = 'none';
     document.getElementById('doc-create-zone').classList.remove('has-doc');
@@ -749,14 +766,15 @@ function mostrarFormCrearDoc() {
 }
 
 async function crearGoogleDoc() {
-    // Validar campos obligatorios antes de crear el doc
     const tituloVal   = document.getElementById('f-titulo').value.trim();
     const estadoVal   = document.getElementById('f-estado').value;
     const comisionVal = document.getElementById('f-comision').value;
+    const tipoVal     = document.getElementById('f-tipo').value;
 
     if (!tituloVal)   { showToast('El título es obligatorio', 'error'); return; }
     if (!estadoVal)   { showToast('El estado es obligatorio', 'error'); return; }
     if (!comisionVal) { showToast('La comisión es obligatoria', 'error'); return; }
+    if (!tipoVal)     { showToast('El tipo de proyecto es obligatorio', 'error'); return; }
 
     const titulo = tituloVal;
     const fecha  = document.getElementById('f-fecha').value || new Date().toISOString().slice(0, 10);
@@ -769,22 +787,17 @@ async function crearGoogleDoc() {
     try {
         const result = await apiGet({ action: 'createDoc', titulo, fecha });
 
-        if (!result || !result.docUrl) {
-            throw new Error('No se recibió URL del documento');
-        }
+        if (!result || !result.docUrl) throw new Error('No se recibió URL del documento');
 
         pendingDocUrl = result.docUrl;
 
-        // Mostrar preview
         const preview = document.getElementById('doc-url-preview');
         document.getElementById('doc-url-link').href = pendingDocUrl;
         preview.style.display = 'block';
         document.getElementById('doc-create-zone').classList.add('has-doc');
 
-        // Abrir en nueva pestaña
         window.open(pendingDocUrl, '_blank');
 
-        // Campos ya validados arriba — guardar automáticamente
         showToast('Documento creado, guardando proyecto...', 'success');
         await new Promise(r => setTimeout(r, 800));
         await saveForm();
@@ -826,15 +839,17 @@ function renderStats() {
 }
 
 function getFiltered() {
-    const q   = document.getElementById('search-input').value.toLowerCase();
-    const est = document.getElementById('filter-estado').value;
-    const com = document.getElementById('filter-comision').value;
+    const q    = document.getElementById('search-input').value.toLowerCase();
+    const est  = document.getElementById('filter-estado').value;
+    const tipo = document.getElementById('filter-tipo').value;
+    const com  = document.getElementById('filter-comision').value;
 
     return proyectos.filter(p => {
-        const matchQ   = !q   || (p.titulo||'').toLowerCase().includes(q) || (p.descripcion||'').toLowerCase().includes(q);
-        const matchEst = !est || p.estado === est;
-        const matchCom = !com || p.comision === com;
-        return matchQ && matchEst && matchCom;
+        const matchQ    = !q    || (p.titulo||'').toLowerCase().includes(q) || (p.descripcion||'').toLowerCase().includes(q);
+        const matchEst  = !est  || p.estado === est;
+        const matchTipo = !tipo || p.tipo === tipo;
+        const matchCom  = !com  || p.comision === com;
+        return matchQ && matchEst && matchTipo && matchCom;
     }).sort((a, b) => Number(b.id) - Number(a.id));
 }
 
@@ -855,6 +870,7 @@ function renderList() {
 
     list.innerHTML = filtered.map(p => {
         const est      = ESTADOS[p.estado] || ESTADOS['Presentado'];
+        const tipoInfo = p.tipo ? TIPOS[p.tipo] : null;
         const fecha    = p.fecha ? formatFecha(p.fecha) : '—';
         const tieneDoc = !!p.docUrl;
         const estadoOpts = Object.entries(ESTADOS).map(([k,v]) =>
@@ -862,10 +878,11 @@ function renderList() {
         ).join('');
 
         return `
-        <div class="project-card ${est.border}${tieneDoc ? ' has-doc-only' : ''}" ${tieneDoc ? `onclick="window.open('${escHtml(p.docUrl)}', '_blank')"` : ''}>
+        <div class="project-card ${est.border}" ${tieneDoc ? `onclick="window.open('${escHtml(p.docUrl)}', '_blank')"` : ''}>
             <div class="project-card-inner">
                 <div class="project-main">
                     <div class="project-top">
+                        ${tipoInfo ? `<span class="tipo-badge ${tipoInfo.cls}">${tipoInfo.label}</span>` : ''}
                         <div class="project-title">${escHtml(p.titulo)}</div>
                     </div>
                     <div class="project-meta project-meta-row">
@@ -877,6 +894,10 @@ function renderList() {
                             <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
                             Creado: ${formatFecha(p.fechaCreacion)}
                         </span>` : ''}
+                        ${p.creadoPor ? `<span class="meta-item" title="Creado por">
+                            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            ${escHtml(p.creadoPor)}
+                        </span>` : ''}
                     </div>
                     <div class="project-meta project-meta-row">
                         ${p.comision ? `<span class="meta-item">
@@ -887,7 +908,6 @@ function renderList() {
                             <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
                             ${escHtml(p.expediente)}
                         </span>` : ''}
-                        
                         ${tieneDoc ? `<span class="meta-item" style="color:#1a73e8">
                             <svg viewBox="0 0 24 24" style="fill:#1a73e8"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
                             Google Doc
@@ -900,7 +920,6 @@ function renderList() {
                         ${estadoOpts}
                     </select>
                     <div class="action-btns" onclick="event.stopPropagation()">
-                        
                         ${tieneDoc ? `
                         <button class="icon-btn icon-btn-docs" title="Abrir en Google Docs" onclick="window.open('${escHtml(p.docUrl)}', '_blank')">
                             <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
@@ -966,23 +985,20 @@ function editProyecto(id) {
     document.getElementById('form-modal-title').textContent  = 'Editar Proyecto';
     document.getElementById('f-titulo').value          = p.titulo        || '';
     document.getElementById('f-estado').value          = p.estado        || 'Presentado';
+    document.getElementById('f-tipo').value            = p.tipo          || '';  // ← nuevo
     document.getElementById('f-comision').value        = p.comision      || '';
     document.getElementById('f-fecha').value           = p.fecha         || '';
     document.getElementById('f-fecha-creacion').value  = p.fechaCreacion || '';
     document.getElementById('f-expediente').value      = p.expediente    || '';
     document.getElementById('f-descripcion').value     = p.descripcion   || '';
 
-    // Si tiene docUrl guardado, pre-cargar para que no se pierda al guardar
     if (p.docUrl) pendingDocUrl = p.docUrl;
 
-    // Mostrar info del Google Doc existente
     const docExistingSection = document.getElementById('doc-existing-section');
     const docUrlPreview = document.getElementById('doc-url-preview');
     if (p.docUrl) {
-        // Mostrar botón "Seguir editando" con la URL guardada
         document.getElementById('btn-seguir-editando').href = p.docUrl;
         docExistingSection.style.display = 'block';
-        // Ocultar ícono, descripción, botón crear y link input
         document.getElementById('btn-create-doc').style.display = 'none';
         document.getElementById('doc-upload-icon').style.display = 'none';
         document.getElementById('doc-upload-text').style.display = 'none';
@@ -1003,15 +1019,15 @@ function editProyecto(id) {
 async function saveForm() {
     const titulo   = document.getElementById('f-titulo').value.trim();
     const estado   = document.getElementById('f-estado').value;
+    const tipo     = document.getElementById('f-tipo').value;          // ← nuevo
     const comision = document.getElementById('f-comision').value;
 
     if (!titulo)   { showToast('El título es obligatorio', 'error'); return; }
     if (!estado)   { showToast('El estado es obligatorio', 'error'); return; }
+    if (!tipo)     { showToast('El tipo de proyecto es obligatorio', 'error'); return; }  // ← nuevo
     if (!comision) { showToast('La comisión es obligatoria', 'error'); return; }
 
-    // Validar archivo: necesita PDF nuevo, docUrl nuevo, o (en edición) archivo ya existente
     const existing = editingId ? proyectos.find(x => String(x.id) === String(editingId)) : null;
-    const yaHayArchivo = existing && existing.docUrl;
     if (!editingId && !pendingDocUrl) {
         showToast('Creá o vinculá un Google Doc', 'error'); return;
     }
@@ -1021,19 +1037,20 @@ async function saveForm() {
     showLoading(editingId ? 'Guardando cambios...' : 'Creando proyecto...');
 
     try {
-
         const body = {
-            action:         editingId ? 'update' : 'add',
-            id:             editingId,
+            action:        editingId ? 'update' : 'add',
+            id:            editingId,
             titulo,
             estado,
+            tipo,                                                          // ← nuevo
             comision,
-            fecha:          document.getElementById('f-fecha').value,
-            fechaCreacion:  editingId ? (existing?.fechaCreacion || '') : new Date().toISOString().slice(0,10),
-            expediente:     document.getElementById('f-expediente').value.trim(),
-            descripcion:    document.getElementById('f-descripcion').value.trim(),
-            // Google Doc URL: si se creó uno nuevo en esta sesión, usarlo; si no, preservar el existente
-            docUrl:         pendingDocUrl || (existing?.docUrl || '')
+            fecha:         document.getElementById('f-fecha').value,
+            fechaCreacion: editingId ? (existing?.fechaCreacion || '') : new Date().toISOString().slice(0,10),
+            expediente:    document.getElementById('f-expediente').value.trim(),
+            descripcion:   document.getElementById('f-descripcion').value.trim(),
+            docUrl:        pendingDocUrl || (existing?.docUrl || ''),
+            // ── NUEVO: guardar creador solo al crear, preservar en edición ──
+            creadoPor:     editingId ? (existing?.creadoPor || '') : getCurrentUserName()
         };
 
         showLoading('Guardando...');
@@ -1056,11 +1073,11 @@ function closeFormModal() {
     document.getElementById('form-modal').classList.remove('active');
     ['f-titulo','f-expediente','f-descripcion','f-fecha-creacion'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('f-estado').value   = 'Presentado';
+    document.getElementById('f-tipo').value     = '';  // ← nuevo
     document.getElementById('f-comision').value = '';
     document.getElementById('f-fecha').value    = '';
 
     document.getElementById('form-modal-title').textContent  = 'Nuevo Proyecto';
-    // Reset Google Docs
     document.getElementById('doc-url-preview').style.display = 'none';
     document.getElementById('doc-existing-section').style.display = 'none';
     document.getElementById('doc-create-zone').classList.remove('has-doc');
@@ -1115,9 +1132,10 @@ function bindEvents() {
     document.getElementById('btn-nuevo-proyecto').addEventListener('click', () => {
         editingId = null;
         document.getElementById('f-estado').value = '';
-        document.getElementById('f-fecha').value = '';
+        document.getElementById('f-tipo').value   = '';  // ← nuevo
+        document.getElementById('f-fecha').value  = '';
         document.getElementById('f-fecha-creacion').value = new Date().toISOString().slice(0,10);
-            toggleFecha('');
+        toggleFecha('');
         document.getElementById('form-modal').classList.add('active');
     });
 
@@ -1126,8 +1144,6 @@ function bindEvents() {
     document.getElementById('form-modal').addEventListener('click', e => { if (e.target.id==='form-modal') closeFormModal(); });
     document.getElementById('form-save').addEventListener('click', saveForm);
 
-
-
     document.getElementById('confirm-modal-close').addEventListener('click', () => { document.getElementById('confirm-modal').classList.remove('active'); deleteId=null; });
     document.getElementById('confirm-cancel').addEventListener('click',      () => { document.getElementById('confirm-modal').classList.remove('active'); deleteId=null; });
     document.getElementById('confirm-delete').addEventListener('click', doDelete);
@@ -1135,9 +1151,8 @@ function bindEvents() {
 
     document.getElementById('search-input').addEventListener('input', renderList);
     document.getElementById('filter-estado').addEventListener('change', renderList);
+    document.getElementById('filter-tipo').addEventListener('change', renderList);    // ← nuevo
     document.getElementById('filter-comision').addEventListener('change', renderList);
-
-
 }
 
 // ════════════════════════════════════════
