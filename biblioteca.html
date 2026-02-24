@@ -43,10 +43,6 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            margin-bottom: -1px;
         }
 
         .header-left { display: flex; align-items: center; gap: 14px; }
@@ -69,7 +65,8 @@
             border-bottom: 1px solid var(--gray-200);
             padding: 12px 24px;
             display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-            position: sticky; top: 73px; z-index: 90;
+            position: static; top: 0; z-index: 90;
+            margin-top: 0;
         }
 
         .toolbar-left { display: flex; align-items: center; gap: 10px; flex: 1; flex-wrap: wrap; }
@@ -387,6 +384,7 @@
     <!-- TOAST -->
     <div class="toast" id="toast"></div>
 
+    <div style="position:sticky;top:0;z-index:100;">
     <!-- HEADER -->
     <div id="header">
         <div class="header-left">
@@ -438,6 +436,7 @@
         </button>
     </div>
 
+    </div>
     <!-- MAIN -->
     <div class="main">
         <div class="stats-row" id="stats-row"></div>
